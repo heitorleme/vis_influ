@@ -189,8 +189,8 @@ if uploaded_files:
             # Parâmetros da distribuição normal
             std_dev = 3
 
-            # Novo DataFrame com as faixas
-            dist_df = pd.DataFrame(columns=["Influencer", "< 5 anos", "5-9 anos", "9-12 anos", "> 12 anos"])
+            # Inicializar lista de resultados
+            dist_list = []
 
             for index, row in result_edu.iterrows():
                 influencer = row["influencer"]
@@ -201,15 +201,18 @@ if uploaded_files:
                 prob_9_12 = (norm.cdf(12, mean, std_dev) - norm.cdf(9, mean, std_dev)) * 100
                 prob_more_12 = (1 - norm.cdf(12, mean, std_dev)) * 100
 
-                dist_df = dist_df.append({
+                dist_list.append({
                     "Influencer": influencer,
                     "< 5 anos": round(prob_less_5, 2),
                     "5-9 anos": round(prob_5_9, 2),
                     "9-12 anos": round(prob_9_12, 2),
                     "> 12 anos": round(prob_more_12, 2)
-                }, ignore_index=True)
+                })
 
-            # Exibir a tabela formatada
+            # Criar DataFrame a partir da lista
+            dist_df = pd.DataFrame(dist_list)
+
+            # Exibir no Streamlit
             st.dataframe(dist_df)
 
         except Exception as e:
