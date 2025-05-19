@@ -43,6 +43,11 @@ if uploaded_files:
         df_cidades.rename(columns={"name": "Cidade"}, inplace=True)
         df_cidades_exibicao = df_cidades.copy()
         df_cidades_exibicao.drop(columns=["coords.lat", "coords.lon", "country.id", "country.code"], inplace=True)
+        
+        # Converter 'weight' em porcentagem formatada com símbolo %
+        df_cidades_exibicao["weight"] = df_cidades_exibicao["weight"] * 100
+        df_cidades_exibicao["weight"] = df_cidades_exibicao["weight"].round(2).astype(str) + "%"
+
         df_cidades_exibicao.rename(columns={"weight":"Porcentagem da audiência"}, inplace=True)
         df_cidades_exibicao = df_cidades_exibicao.sort_values(by=["influencer", "Porcentagem da audiência"], ascending=[True, False]).groupby("influencer").head(top_n)
 
