@@ -54,8 +54,8 @@ if uploaded_files:
         output = io.BytesIO()
         with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
             df_cidades_exibicao.to_excel(writer, index=False, sheet_name='Cidades')
-            writer.save()
-            processed_data = output.getvalue()
+        output.seek(0)
+        processed_data = output.getvalue()
 
         st.download_button(
             label="📥 Baixar tabela de cidades como Excel",
