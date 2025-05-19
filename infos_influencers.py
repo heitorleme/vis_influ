@@ -44,13 +44,16 @@ if uploaded_files:
         df_cidades_exibicao = df_cidades.copy()
         df_cidades_exibicao.drop(columns=["coords.lat", "coords.lon", "country.id", "country.code"], inplace=True)
         df_cidades_exibicao.rename(columns={"weight":"Porcentagem da audiência"}, inplace=True)
-        df_cidades_exibicao = df_cidades_exibicao.sort_values(by=["influencer", "Porcentagem da audiência"], ascending=[True, False]).groupby("influencer").head(top_n)
+        df_cidades_exibicao = df_cidades_exibicao.sort_values(by=["influencer", "weight"], ascending=[True, False]).groupby("influencer").head(top_n)
 
         # Mostrar tabela original
         st.subheader("Cidades por Influencer")
         st.dataframe(df_cidades_exibicao)
 
         # Botão para exportar a tabela para Excel
+        data_hoje = datetime.today().strftime("%Y-%m-%d")
+        file_name = f"cidades_por_influencer_{data_hoje}.xlsx"
+
         output = io.BytesIO()
         with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
             df_cidades_exibicao.to_excel(writer, index=False, sheet_name='Cidades')
@@ -60,8 +63,7 @@ if uploaded_files:
         st.download_button(
             label="📥 Baixar tabela de cidades como Excel",
             data=processed_data,
-            data_hoje = datetime.today().strftime("%Y-%m-%d"),
-            file_name = f"cidades_por_influencer_{data_hoje}.xlsx",
+            file_name=file_name,
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         )
 else:
