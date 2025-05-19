@@ -42,7 +42,7 @@ if uploaded_files:
     if not df_cidades.empty:
         df_cidades.rename(columns={"name": "Cidade"}, inplace=True)
         df_cidades_exibicao = df_cidades.copy()
-        df_cidades_exibicao.drop(columns=["coords.lat", "coords.lon", "country.id", "country.code", "state.id", "state.name"], inplace=True)
+        df_cidades_exibicao.drop(columns=["id", "coords.lat", "coords.lon", "country.id", "country.code", "state.id", "state.name"], inplace=True)
         
         # Converter 'weight' em porcentagem formatada com símbolo %
         df_cidades_exibicao["weight"] = df_cidades_exibicao["weight"] * 100
