@@ -42,7 +42,7 @@ if uploaded_files:
     if not df_cidades.empty:
         df_cidades.rename(columns={"name": "Cidade"}, inplace=True)
         df_cidades_exibicao = df_cidades.copy()
-        df_cidades_exibicao.drop(columns=["id", "coords.lat", "coords.lon", "country.id", "country.code", "state.id", "state.name"], inplace=True)
+        df_cidades_exibicao.drop(columns=["coords.lat", "coords.lon", "country.id", "country.code", "state.id", "state.name", "id"], inplace=True)
         
         # Converter 'weight' em porcentagem formatada com símbolo %
         df_cidades_exibicao["weight"] = df_cidades_exibicao["weight"] * 100
@@ -71,5 +71,40 @@ if uploaded_files:
             file_name=file_name,
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         )
+ 
+        # BLOCO: Análise de Classes Sociais por Cidade
+
+        st.subheader("Análise de Classes Sociais por Influencer 🧮")
+
+        # Importar arquivo de classes sociais
+        try:
+            url_excel = "https://raw.githubusercontent.com/heitorleme/visd_influ/main/classes_sociais_por_cidade.xlsx"
+            classes_por_cidade = pd.read_excel(url_excel)
+
+            # Normalizar peso por influencer
+            df_cidades["normalized_weight"] = df_cidades.groupby("influencer")["weight"].transform(lambda x: x / x.sum())
+
+            # Merge
+            df_merged = pd.merge(df_cidades, classes_por_cidade, on="Cidade", how="inner")
+
+            # Cálculo ponderado das classes
+            df_merged["normalized_classe_de"] = df_merged["normalized_weight"] * df_merged["Classes D e E"]
+            df_merged["normalized_classe_c"] = df_merged["normalized_weight"] * df_merged["Classe C"]
+            df_merged["normalized_classe_b"] = df_merged["normalized_weight"] * df_merged["Classe B"]
+            df_merged["normalized_classe_a"] = df_merged["normalized_weight"] * df_merged["Classe A"]
+
+            # Média ponderada por influencer
+            result = df_merged.groupby("influencer")[["normalized_classe_de", "normalized_classe_c", "normalized_classe_b", "normalized_classe_a"]].sum() * 100
+            result = result.round(2)
+
+            # Renomear colunas
+            result.columns = ["Classes D e E (%)", "Classe C (%)", "Classe B (%)", "Classe A (%)"]
+
+            # Exibir resultados
+            st.dataframe(result.reset_index())
+
+        except Exception as e:
+            st.error(f"Erro ao carregar ou processar a planilha de classes sociais: {e}")
+
 else:
     st.info("Por favor, carregue arquivos JSON para começar.")
