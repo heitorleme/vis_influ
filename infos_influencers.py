@@ -116,8 +116,11 @@ if uploaded_files:
     df_ages = pd.DataFrame()
 
     for i in influencers_ficheiros.keys():
-        try:
-            df_influ = pd.read_json(influencers_ficheiros.get(i))
+    try:
+        file = influencers_ficheiros.get(i)
+        file.seek(0)
+        file_bytes = file.read()
+        df_influ = pd.read_json(io.BytesIO(file_bytes))
 
             # Cidades
             cities_entries = df_influ.get("audience_followers", {}).get("data", {}).get("audience_geo", {}).get("cities", [])
