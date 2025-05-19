@@ -116,26 +116,26 @@ if uploaded_files:
     df_ages = pd.DataFrame()
 
     for i in influencers_ficheiros.keys():
-    try:
-        file = influencers_ficheiros.get(i)
-        file.seek(0)
-        file_bytes = file.read()
-        df_influ = pd.read_json(io.BytesIO(file_bytes))
+        try:
+            file = influencers_ficheiros.get(i)
+            file.seek(0)
+            file_bytes = file.read()
+            df_influ = pd.read_json(io.BytesIO(file_bytes))
 
-            # Cidades
-            cities_entries = df_influ.get("audience_followers", {}).get("data", {}).get("audience_geo", {}).get("cities", [])
-            df_cities = pd.json_normalize(cities_entries)
-            df_cities["influencer"] = i
-            df = pd.concat([df, df_cities], ignore_index=True)
+                # Cidades
+                cities_entries = df_influ.get("audience_followers", {}).get("data", {}).get("audience_geo", {}).get("cities", [])
+                df_cities = pd.json_normalize(cities_entries)
+                df_cities["influencer"] = i
+                df = pd.concat([df, df_cities], ignore_index=True)
 
-            # Idades
-            age_entries = df_influ.get("audience_followers", {}).get("data", {}).get("audience_genders_per_age", [])
-            ages = pd.json_normalize(age_entries)
-            ages["influencer"] = i
-            df_ages = pd.concat([df_ages, ages], ignore_index=True)
+                # Idades
+                age_entries = df_influ.get("audience_followers", {}).get("data", {}).get("audience_genders_per_age", [])
+                ages = pd.json_normalize(age_entries)
+                ages["influencer"] = i
+                df_ages = pd.concat([df_ages, ages], ignore_index=True)
 
-        except Exception as e:
-            st.warning(f"Erro ao processar dados de {i}: {e}")
+            except Exception as e:
+                st.warning(f"Erro ao processar dados de {i}: {e}")
 
     if df_ages.empty or df.empty:
         st.info("Dados insuficientes para análise educacional.")
