@@ -44,7 +44,7 @@ if uploaded_files:
         df_cidades_exibicao = df_cidades.copy()
         df_cidades_exibicao.drop(columns=["coords.lat", "coords.lon", "country.id", "country.code"], inplace=True)
         df_cidades_exibicao.rename(columns={"weight":"Porcentagem da audiência"}, inplace=True)
-        df_cidades_exibicao = df_cidades_exibicao.sort_values(by=["influencer", "weight"], ascending=[True, False]).groupby("influencer").head(top_n)
+        df_cidades_exibicao = df_cidades_exibicao.sort_values(by=["influencer", "Porcentagem da audiência"], ascending=[True, False]).groupby("influencer").head(top_n)
 
         # Mostrar tabela original
         st.subheader("Cidades por Influencer")
