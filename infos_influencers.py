@@ -79,7 +79,7 @@ if uploaded_files:
         # Importar arquivo de classes sociais
         try:
             url_excel = "https://github.com/heitorleme/vis_influ/raw/d9e1df5f981cbecc1b85e8245de3395b1444ae2c/educacao_por_cidade.xlsx"
-            classes_por_cidade = pd.read_excel(url_excel)
+            classes_por_cidade = pd.read_excel(url_excel, header=0)
 
             # Normalizar peso por influencer
             df_cidades["normalized_weight"] = df_cidades.groupby("influencer")["weight"].transform(lambda x: x / x.sum())
