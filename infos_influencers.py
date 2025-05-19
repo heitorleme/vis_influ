@@ -4,6 +4,7 @@ import streamlit as st
 import json
 import io
 from datetime import datetime
+from scipy.stats import norm
 
 # Upload de múltiplos arquivos JSON
 uploaded_files = st.file_uploader("Carregue os arquivos JSON dos influencers", type="json", accept_multiple_files=True)
@@ -105,6 +106,111 @@ if uploaded_files:
 
         except Exception as e:
             st.error(f"Erro ao carregar ou processar a planilha de classes sociais: {e}")
+
+    # ============================
+    # SEÇÃO: Análise de Educação 📚
+    # ============================
+    st.subheader("Análise de Educação por Influencer 📚")
+
+    df = pd.DataFrame()
+    df_ages = pd.DataFrame()
+
+    for i in influencers_ficheiros.keys():
+        try:
+            df_influ = pd.read_json(influencers_ficheiros.get(i))
+
+            # Cidades
+            cities_entries = df_influ.get("audience_followers", {}).get("data", {}).get("audience_geo", {}).get("cities", [])
+            df_cities = pd.json_normalize(cities_entries)
+            df_cities["influencer"] = i
+            df = pd.concat([df, df_cities], ignore_index=True)
+
+            # Idades
+            age_entries = df_influ.get("audience_followers", {}).get("data", {}).get("audience_genders_per_age", [])
+            ages = pd.json_normalize(age_entries)
+            ages["influencer"] = i
+            df_ages = pd.concat([df_ages, ages], ignore_index=True)
+
+        except Exception as e:
+            st.warning(f"Erro ao processar dados de {i}: {e}")
+
+    if df_ages.empty or df.empty:
+        st.info("Dados insuficientes para análise educacional.")
+    else:
+        # Preparar colunas e normalizar nomes
+        df_ages["male"] = pd.to_numeric(df_ages["male"], errors="coerce")
+        df_ages["female"] = pd.to_numeric(df_ages["female"], errors="coerce")
+        df_ages["malefemale"] = df_ages["male"] + df_ages["female"]
+
+        df["Cidade"] = df["name"]
+        df_unido = pd.merge(df, df_ages, on="influencer")
+        df_unido.rename(columns={"code": "faixa etária"}, inplace=True)
+
+        try:
+            # Importar dados educacionais
+            url_excel = "https://github.com/heitorleme/vis_influ/raw/refs/heads/main/educacao_por_cidade.xlsx"
+            df_edu = pd.read_excel(url_excel, header=0)
+
+            # Transformar para formato longo
+            df_edu_longo = pd.melt(df_edu,
+                                id_vars="Cidade",
+                                var_name="grupo",
+                                value_name="average_years_of_education")
+
+            df_edu_longo['gender'] = df_edu_longo['grupo'].str.extract(r'^(Homens|Mulheres)')
+            df_edu_longo['faixa etária'] = df_edu_longo['grupo'].str.extract(r'(\d+\-\d+|\d+\+|\d+\-)')
+
+            # Calcular pesos ponderados
+            df_unido["male_weighted"] = df_unido["male"] * df_unido["weight"]
+            df_unido["female_weighted"] = df_unido["female"] * df_unido["weight"]
+
+            # Merge com dados educacionais
+            df_merged = pd.merge(df_unido, df_edu_longo, on=["Cidade", "faixa etária"], how="inner")
+
+            df_merged["contribution"] = df_merged.apply(
+                lambda row: row["average_years_of_education"] * row["male_weighted"] * 2
+                if row["gender"] == "Homens"
+                else row["average_years_of_education"] * row["female_weighted"] * 2,
+                axis=1
+            )
+
+            # Resultado final por influencer
+            result_edu = df_merged.groupby('influencer').agg(
+                Escolaridade_Média_Ponderada=('contribution', 'sum')
+            ).reset_index()
+
+            result_edu["Escolaridade_Média_Ponderada"] = result_edu["Escolaridade_Média_Ponderada"].round(2)
+
+            st.markdown("#### Distribuição Estimada por Faixa de Escolaridade 🎓")
+
+            # Parâmetros da distribuição normal
+            std_dev = 3
+
+            # Novo DataFrame com as faixas
+            dist_df = pd.DataFrame(columns=["Influencer", "< 5 anos", "5-9 anos", "9-12 anos", "> 12 anos"])
+
+            for index, row in result_edu.iterrows():
+                influencer = row["influencer"]
+                mean = row["Escolaridade_Média_Ponderada"]
+
+                prob_less_5 = norm.cdf(5, mean, std_dev) * 100
+                prob_5_9 = (norm.cdf(9, mean, std_dev) - norm.cdf(5, mean, std_dev)) * 100
+                prob_9_12 = (norm.cdf(12, mean, std_dev) - norm.cdf(9, mean, std_dev)) * 100
+                prob_more_12 = (1 - norm.cdf(12, mean, std_dev)) * 100
+
+                dist_df = dist_df.append({
+                    "Influencer": influencer,
+                    "< 5 anos": round(prob_less_5, 2),
+                    "5-9 anos": round(prob_5_9, 2),
+                    "9-12 anos": round(prob_9_12, 2),
+                    "> 12 anos": round(prob_more_12, 2)
+                }, ignore_index=True)
+
+            # Exibir a tabela formatada
+            st.dataframe(dist_df)
+
+        except Exception as e:
+            st.error(f"Erro ao carregar ou processar a planilha de educação: {e}")
 
 else:
     st.info("Por favor, carregue arquivos JSON para começar.")
