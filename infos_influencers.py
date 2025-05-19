@@ -60,8 +60,8 @@ if uploaded_files:
         st.download_button(
             label="📥 Baixar tabela de cidades como Excel",
             data=processed_data,
-            data_hoje = datetime.today().strftime("%Y-%m-%d")
-            file_name = f"cidades_por_influencer_{data_hoje}.xlsx"
+            data_hoje = datetime.today().strftime("%Y-%m-%d"),
+            file_name = f"cidades_por_influencer_{data_hoje}.xlsx",
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         )
 else:
