@@ -78,7 +78,7 @@ if uploaded_files:
 
         # Importar arquivo de classes sociais
         try:
-            url_excel = "https://raw.githubusercontent.com/heitorleme/visd_influ/main/classes_sociais_por_cidade.xlsx"
+            url_excel = "https://github.com/heitorleme/vis_influ/raw/d9e1df5f981cbecc1b85e8245de3395b1444ae2c/educacao_por_cidade.xlsx"
             classes_por_cidade = pd.read_excel(url_excel)
 
             # Normalizar peso por influencer
