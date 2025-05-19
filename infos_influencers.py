@@ -85,7 +85,7 @@ if uploaded_files:
             df_cidades["normalized_weight"] = df_cidades.groupby("influencer")["weight"].transform(lambda x: x / x.sum())
 
             # Merge
-            df_merged = pd.merge(df_cidades, classes_por_cidade, on="Cidade", how="inner")
+            df_merged = pd.merge(df_cidades, classes_por_cidade, on="Cidade", how="left")
 
             # Cálculo ponderado das classes
             df_merged["normalized_classe_de"] = df_merged["normalized_weight"] * df_merged["Classes D e E"]
