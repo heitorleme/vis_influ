@@ -52,7 +52,7 @@ if uploaded_files:
         df_cidades_exibicao = df_cidades_exibicao.sort_values(by=["influencer", "Porcentagem da audiência"], ascending=[True, False]).groupby("influencer").head(top_n)
 
         # Mostrar tabela original
-        st.subheader("Cidades por Influencer")
+        st.subheader("Cidades por Influencer 🌎")
         st.dataframe(df_cidades_exibicao)
 
         # Botão para exportar a tabela para Excel
