@@ -409,28 +409,39 @@ if uploaded_files:
     # ============================
 	st.subheader("Interesses da Audiência 👫")
 
-	df_top_interesses = pd.DataFrame()
-
+	df_top_interesses_formatado = pd.DataFrame(columns=["influencer", "interesses_formatados"])
+	
 	for i in influencers_ficheiros.keys():
 		try:
 			file = influencers_ficheiros.get(i)
 			file.seek(0)
 			file_bytes = file.read()
 			df_influ = pd.read_json(io.BytesIO(file_bytes))
-
-            # Interesses - Top 5
+	
+	        # Interesses - Top 5
 			interests_entries = df_influ.get("audience_followers", {}).get("data", {}).get("audience_interests", [])
 			if isinstance(interests_entries, list):
 				sorted_interests = sorted(interests_entries, key=lambda x: x.get("weight", 0), reverse=True)[:5]
-				df_interesses = pd.DataFrame(sorted_interests)
-				df_interesses["influencer"] = i
-				df_top_interesses = pd.concat([df_top_interesses, df_interesses], ignore_index=True)
-			
-			# Exibir no Streamlit
-			st.dataframe(df_top_interesses)
-
+	
+	            # Formatando como string: "Interesse (XX,YY%)"
+				interesses_formatados = "\n".join([
+					f"{entry['name']} ({entry['weight']:.2f}%)"
+					for entry in sorted_interests
+					if 'name' in entry and 'weight' in entry
+				])
+	
+				df_top_interesses_formatado = pd.concat([
+					df_top_interesses_formatado,
+					pd.DataFrame([{
+						"influencer": i,
+						"interesses_formatados": interesses_formatados
+					}])
+				], ignore_index=True)
 		except Exception as e:
 			st.warning(f"Erro ao processar dados de {i}: {e}")
+
+# Exibir no Streamlit
+st.dataframe(df_top_interesses_formatado)
     
 else:
 	st.info("Por favor, carregue arquivos JSON para começar.")
