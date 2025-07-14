@@ -424,7 +424,7 @@ if uploaded_files:
 				sorted_interests = sorted(interests_entries, key=lambda x: x.get("weight", 0), reverse=True)[:5]
 	
 			# Formatando os interesses com vírgula nas quatro primeiras linhas e quebra de linha (\n)
-			interesses_formatados = "\n".join([
+			interesses_formatados = "\n  ".join([
 				f"{entry['name']} ({entry['weight'] * 100:.2f}%)" + ("," if idx < len(sorted_interests) - 1 else "")
 				for idx, entry in enumerate(sorted_interests)
 				if 'name' in entry and 'weight' in entry
