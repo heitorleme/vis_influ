@@ -521,7 +521,12 @@ with abas[1]:
 			})
 	
 		except Exception as e:
-			st.warning(f"Erro ao processar dados de {i}: {e}")
+	        print(f"Erro ao processar dados de {i}: {e}")
+	        try:
+	            print("Conteúdo do JSON com erro:")
+	            print(json.dumps(data, indent=2))  # Isso ajuda a ver se há algo estranho
+	        except Exception as inner_e:
+	            print(f"Erro ao tentar exibir o JSON: {inner_e}")
 	
 	# Criar DataFrame final
 	df_resultado = pd.DataFrame(lista_consolidada)
