@@ -497,11 +497,8 @@ with abas[1]:
 			# Carrega o conteúdo JSON como dicionário
 			data = json.load(io.BytesIO(file_bytes))
 			
-			perfil_raw = data.get("user_profile", {})
-			perfil = perfil_raw if isinstance(perfil_raw, dict) else {}
-			
-			username = perfil.get("user_profile", "N/A").get("username", "N/A")
-			nome = perfil.get("user_profile", "N/A").get("fullname", "N/A")
+			username = data["user_profile"]["username"]
+			nome = data["user_profile"]["fullname"]
 			dispersion = perfis_e_dispersoes.get(username, "N/A")
 			alcance = format_milhar(perfil.get("avg_reels_plays"))
 			#classe_social = perfil.get("classe_social", "N/A")
