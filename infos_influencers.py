@@ -534,7 +534,7 @@ with abas[1]:
 			username = data["user_profile"]["username"]
 			nome = data["user_profile"]["fullname"]
 
-			dispersion = perfis_e_dispersoes.get(username, "N/A")
+			dispersion = round(perfis_e_dispersoes.get(username, "N/A"), 0)
 			alcance = format_milhar(data["user_profile"].get("avg_reels_plays"))
 			classe_social = get_classes_sociais_formatadas(df_classes_formatado, username)
 			escolaridade = get_escolaridades_formatadas(df_educacao_formatado, username)
