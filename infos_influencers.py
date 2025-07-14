@@ -46,30 +46,33 @@ def format_milhar(valor):
 # Função para formatar os valores com separador de milhar
 formatador_milhar = FuncFormatter(lambda x, _: f'{int(x):,}'.replace(',', '.'))
 
-abas = st.tabs(["Resumo 📄", "Influencer 👤", "Audiência 📊", "Publicações 📝"])
+abas = st.tabs(["Página Inicial 🏠", "Resumo 📄", "Influencer 👤", "Audiência 📊", "Publicações 📝"])
 
-# Upload de múltiplos arquivos JSON
-uploaded_files = st.file_uploader("Carregue os arquivos JSON dos influencers", type="json", accept_multiple_files=True)
-
-# Inicialização
-influencers = []
-influencers_ficheiros = {}
-
-if uploaded_files:
-	for file in uploaded_files:
-		filename = file.name
-		partes = filename.split("_")
-		if len(partes) > 1:
-			influencer = partes[1][:-5]  # Remover .json
-			influencers.append(influencer)
-			influencers_ficheiros[influencer] = file
-		else:
-			st.warning(f"O arquivo '{filename}' não segue o padrão esperado.")
-else:
-	st.info("Por favor, carregue arquivos JSON para começar.")
-
-with abas[1]:
+with abas[0]:
+	# Upload de múltiplos arquivos JSON
+	uploaded_files = st.file_uploader("Carregue os arquivos JSON dos influencers", type="json", accept_multiple_files=True)
 	
+	# Inicialização
+	influencers = []
+	influencers_ficheiros = {}
+	
+	if uploaded_files:
+		for file in uploaded_files:
+			filename = file.name
+			partes = filename.split("_")
+			if len(partes) > 1:
+				influencer = partes[1][:-5]  # Remover .json
+				influencers.append(influencer)
+				influencers_ficheiros[influencer] = file
+			else:
+				st.warning(f"O arquivo '{filename}' não segue o padrão esperado.")
+	else:
+		st.info("Por favor, carregue arquivos JSON para começar.")
+
+	# Dentro da aba onde influencers_ficheiros é definido
+	st.session_state["influencers_ficheiros"] = influencers_ficheiros
+
+with abas[2]:
     # Seleção do número de registros por influencer
 	top_n = st.selectbox("Quantas cidades deseja exibir por influencer?", [5, 10, 15, 20], index=0)
 
@@ -482,11 +485,12 @@ with abas[1]:
 	# Exibir no Streamlit
 	st.table(df_top_interesses_formatado)
 
-with abas[0]:
+with abas[1]:
 		# Lista para consolidar os dados
-		# Lista para consolidar os dados
+
+	influencers_ficheiros = st.session_state.get("influencers_ficheiros", {})
 	lista_consolidada = []
-	
+
 	for i in influencers_ficheiros.keys():
 		try:
 			file = influencers_ficheiros.get(i)
