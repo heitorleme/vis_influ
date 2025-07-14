@@ -500,8 +500,8 @@ with abas[1]:
 			perfil_raw = data.get("user_profile", {})
 			perfil = perfil_raw if isinstance(perfil_raw, dict) else {}
 			
-			username = perfil.get("username", "N/A")
-			nome = perfil.get("fullname", "N/A")
+			username = perfil.get("user_profile", "N/A").get("username", "N/A")
+			nome = perfil.get("user_profile", "N/A").get("fullname", "N/A")
 			dispersion = perfis_e_dispersoes.get(username, "N/A")
 			alcance = format_milhar(perfil.get("avg_reels_plays"))
 			#classe_social = perfil.get("classe_social", "N/A")
