@@ -285,7 +285,7 @@ with abas[2]:
 			            f"< 5 anos: {row['< 5 anos']:.2f}%",
 			            f"5–9 anos: {row['5-9 anos']:.2f}%",
 			            f"9–12 anos: {row['9-12 anos']:.2f}%",
-			            f"> 12 anos: {row['> 12 anos']:.2f}%"
+			            f"12+ anos: {row['> 12 anos']:.2f}%"
 			        ])
 			    }
 			    for _, row in dist_df.iterrows()
