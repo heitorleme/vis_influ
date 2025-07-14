@@ -221,7 +221,7 @@ if uploaded_files:
     # ============================
     # SEÇÃO: Estatísticas básicas (visualizações, engajamento, etc) 📚
     # ============================
-    st.subheader("Análise de Educação por Influencer 📚")
+    st.subheader("Dados Básicos por Influencer 📊")
 
     # Dicionário para consolidar os dados
     dados_consolidados = {}
@@ -232,20 +232,20 @@ if uploaded_files:
             file.seek(0)
             file_bytes = file.read()
             df_influ = pd.read_json(io.BytesIO(file_bytes))
-            
-        except Exception as e:
-                st.warning(f"Erro ao processar dados de {i}: {e}")
 
-    try:
-        # Obtém os valores únicos ou médios conforme necessário
-        dados_consolidados[i] = {
+                # Obtém os valores únicos ou médios conforme necessário
+            dados_consolidados[i] = {
             "followers": df_influ.get("followers", pd.Series([None])).mean(),
             "engagement_rate": df_influ.get("engagement_rate", pd.Series([None])).mean(),
             "avg_likes": df_influ.get("avg_likes", pd.Series([None])).mean(),
             "avg_comments": df_influ.get("avg_comments", pd.Series([None])).mean(),
             "avg_reels_plays": df_influ.get("avg_reels_plays", pd.Series([None])).mean(),
             }
+            
+        except Exception as e:
+                st.warning(f"Erro ao processar dados de {i}: {e}")
 
+    try:
         # Converte o dicionário consolidado em DataFrame
         df_consolidado = pd.DataFrame.from_dict(dados_consolidados, orient='index')
         df_consolidado.reset_index(inplace=True)
