@@ -7,6 +7,7 @@ from datetime import datetime
 from scipy.stats import norm
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FuncFormatter
+import requests
 
 def format_milhar(valor):
     return f"{round(valor):,}".replace(",", ".") if valor is not None else None
@@ -225,6 +226,55 @@ if uploaded_files:
 
         except Exception as e:
             st.error(f"Erro ao carregar ou processar a planilha de educação: {e}")
+
+    # ============================
+    # SEÇÃO: Cálculo da dispersão de likes/comentários 🔗
+    # ============================
+    perfis = []
+    perfis_e_dispersoes = {}
+    
+    url = "https://instagram-scraper-api2.p.rapidapi.com/v1.2/posts"
+    headers = {
+	    "x-rapidapi-key": "7f728d8233msh6b5402b6234f32ep135c63jsn7b9cdd64c9f7",
+	    "x-rapidapi-host": "instagram-scraper-api2.p.rapidapi.com"
+    }
+
+    # Passar pelos ficheiros uploadados pelo usuário e criar uma lista de perfis
+    for i in influencers_ficheiros.keys():
+        try:
+            perfis.append(i)
+            results = response.json()
+
+    # Iterar sobre os perfis, "zerar" as listas e puxar os dados de likes e comentários (últimos posts)
+            for perfil in perfis:
+                likes_por_post = []
+                comments_por_post = []
+                
+                response = requests.get(url, headers=headers, params=querystring)
+
+                # Adicionar os dados dos posts às listas
+                for i in range(n_posts):
+                        likes_por_post.append(results["data"]["items"][i]["like_count"])
+                        comments_por_post.append(results["data"]["items"][i]["comment_count"])
+
+                # Garante que todos os valores sejam inteiros
+                likes_por_post = [int(like) if like is not None else 0 for like in likes_por_post]
+
+                # Calcula a média, desvpad e normaliza
+                media_likes = np.mean(likes_por_post)
+                media_comments = np.mean(comments_por_post)
+                
+                desvpad_likes = np.std(likes_por_post)
+                desvpad_comments = np.std(comments_por_post)
+            
+                desvpad_normalizado_likes = (desvpad_likes/media_likes) * 100
+                desvpad_normalizado_comments = (desvpad_comments/media_comments) * 100
+
+                # Adiciona a dispersão ao dicionário de valores
+                perfis_e_dispersoes[perfil] = round((desvpad_normalizado_comments + desvpad_normalizado_likes)/2, 0)
+
+        except Exception as e:
+            st.warning(f"Erro ao processar dados de {i}: {e}")
 
     # ============================
     # SEÇÃO: Estatísticas básicas (visualizações, engajamento, etc) 📚
