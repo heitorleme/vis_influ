@@ -67,7 +67,7 @@ with abas[0]:
 			else:
 				st.warning(f"O arquivo '{filename}' não segue o padrão esperado.")
 	else:
-	st.info("Por favor, carregue arquivos JSON para começar.")
+		st.info("Por favor, carregue arquivos JSON para começar.")
 
     # Seleção do número de registros por influencer
 	top_n = st.selectbox("Quantas cidades deseja exibir por influencer?", [5, 10, 15, 20], index=0)
