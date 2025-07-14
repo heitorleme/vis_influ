@@ -6,3 +6,4 @@ openpyxl
 scipy
 matplotlib
 requests
+traceback
