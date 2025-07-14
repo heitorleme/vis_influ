@@ -446,7 +446,7 @@ if uploaded_files:
 			st.warning(f"Erro ao processar dados de {i}: {e}")
 
 	# Exibir no Streamlit
-	st.dataframe(df_top_interesses_formatado)
+	st.table(df_top_interesses_formatado)
 
 else:
 	st.info("Por favor, carregue arquivos JSON para começar.")
