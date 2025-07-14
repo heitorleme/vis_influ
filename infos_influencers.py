@@ -30,7 +30,7 @@ if uploaded_files:
 			influencer = partes[1][:-5]  # Remove .json
 			influencers.append(influencer)
 			influencers_ficheiros[influencer] = file
-        else:
+		else:
 			st.warning(f"O arquivo '{filename}' não segue o padrão esperado.")
 
     # Seleção do número de registros por influencer
