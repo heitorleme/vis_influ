@@ -231,15 +231,18 @@ if uploaded_files:
             file = influencers_ficheiros.get(i)
             file.seek(0)
             file_bytes = file.read()
-            df_influ = pd.read_json(io.BytesIO(file_bytes))
-
-                # Obtém os valores únicos ou médios conforme necessário
+            
+        # Carrega o conteúdo como JSON (dict)
+            data = json.load(io.BytesIO(file_bytes))
+            perfil = data.get("user_profile", {})
+    
+            # Extrai os dados diretamente do dicionário
             dados_consolidados[i] = {
-            "followers": df_influ.get("followers", pd.Series([None])).mean(),
-            "engagement_rate": df_influ.get("engagement_rate", pd.Series([None])).mean(),
-            "avg_likes": df_influ.get("avg_likes", pd.Series([None])).mean(),
-            "avg_comments": df_influ.get("avg_comments", pd.Series([None])).mean(),
-            "avg_reels_plays": df_influ.get("avg_reels_plays", pd.Series([None])).mean(),
+                "followers": perfil.get("followers"),
+                "engagement_rate": perfil.get("engagement_rate"),
+                "avg_likes": perfil.get("avg_likes"),
+                "avg_comments": perfil.get("avg_comments"),
+                "avg_reels_plays": perfil.get("avg_reels_plays"),
             }
             
         except Exception as e:
