@@ -295,8 +295,14 @@ if uploaded_files:
 	except Exception as e:
 		st.warning(f"Ocorreu um erro ao criar o DataFrame: {e}")
 
+	# ============================
+    # SEÇÃO: Extração da credibilidade da audiência 👫
     # ============================
-    # SEÇÃO: Estatísticas básicas (visualizações, engajamento, etc) 📚
+	# st.subheader("Score da Audiência 👫")
+	# A desenvolver - precisamos identificar uma forma de calcular o Score a partir dos dados disponíveis
+	
+    # ============================
+    # SEÇÃO: Estatísticas básicas (visualizações, engajamento, etc)
     # ============================
 	st.subheader("Dados Básicos por Influencer 📊")
 
@@ -397,6 +403,31 @@ if uploaded_files:
     
 		except Exception as e:
 			st.warning(f"Erro ao gerar gráficos para {influenciador_selecionado}: {e}")
+			
+	# ============================
+    # SEÇÃO: Extração da credibilidade da audiência 👫
+    # ============================
+	st.subheader("Interesses da Audiência 👫")
+
+	df_interesses = pd.DataFrame()
+
+	for i in influencers_ficheiros.keys():
+		try:
+			file = influencers_ficheiros.get(i)
+			file.seek(0)
+			file_bytes = file.read()
+			df_influ = pd.read_json(io.BytesIO(file_bytes))
+
+            # Interesses - Top 5
+        	interests_entries = df_influ.get("audience_followers", {}).get("data", {}).get("audience_interests", [])
+        	if isinstance(interests_entries, list):
+	            sorted_interests = sorted(interests_entries, key=lambda x: x.get("weight", 0), reverse=True)[:5]
+	            df_interests = pd.DataFrame(sorted_interests)
+	            df_interests["influencer"] = i
+	            df_top_interesses = pd.concat([df_top_interesses, df_interests], ignore_index=True)
+
+		except Exception as e:
+			st.warning(f"Erro ao processar dados de {i}: {e}")
     
 else:
 	st.info("Por favor, carregue arquivos JSON para começar.")
