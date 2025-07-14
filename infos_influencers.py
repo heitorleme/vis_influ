@@ -409,8 +409,6 @@ if uploaded_files:
     # ============================
 	st.subheader("Interesses da Audiência 👫")
 
-	df_interesses = pd.DataFrame()
-
 	for i in influencers_ficheiros.keys():
 		try:
 			file = influencers_ficheiros.get(i)
@@ -422,9 +420,9 @@ if uploaded_files:
 			interests_entries = df_influ.get("audience_followers", {}).get("data", {}).get("audience_interests", [])
 			if isinstance(interests_entries, list):
 				sorted_interests = sorted(interests_entries, key=lambda x: x.get("weight", 0), reverse=True)[:5]
-				df_interests = pd.DataFrame(sorted_interests)
-				df_interests["influencer"] = i
-				df_top_interesses = pd.concat([df_top_interesses, df_interests], ignore_index=True)
+				df_interesses = pd.DataFrame(sorted_interests)
+				df_interesses["influencer"] = i
+				df_top_interesses = pd.concat([df_top_interesses, df_interesses], ignore_index=True)
 
 		except Exception as e:
 			st.warning(f"Erro ao processar dados de {i}: {e}")
