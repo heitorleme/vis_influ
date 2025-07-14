@@ -243,17 +243,19 @@ if uploaded_files:
 	for i in influencers_ficheiros.keys():
 		try:
 			perfis.append(i)
-			querystring = i
-			response = requests.get(url, headers=headers, params=querystring)
-			results = response.json()
+
 
     # Iterar sobre os perfis, "zerar" as listas e puxar os dados de likes e comentários (últimos posts)
 			for perfil in perfis:
 				likes_por_post = []
 				comments_por_post = []
-                
-				response = requests.get(url, headers=headers, params=querystring)
 
+				# Alterar a query para o perfil e obter a resposta
+				querystring = i                
+				response = requests.get(url, headers=headers, params=querystring)
+				results = response.json()
+
+				# Determinar o número de posts para a iteração e os cálculos
 				n_posts = min(12, len(results["data"]["items"]))
 
                 # Adicionar os dados dos posts às listas
