@@ -427,7 +427,7 @@ if uploaded_files:
 				df_top_interesses = pd.concat([df_top_interesses, df_interesses], ignore_index=True)
 			
 			# Exibir no Streamlit
-			st.dataframe(dist_df)
+			st.dataframe(df_top_interesses)
 
 		except Exception as e:
 			st.warning(f"Erro ao processar dados de {i}: {e}")
