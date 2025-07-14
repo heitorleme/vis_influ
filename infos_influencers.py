@@ -243,6 +243,7 @@ if uploaded_files:
 	for i in influencers_ficheiros.keys():
 		try:
 			perfis.append(i)
+			querystring = i
 			response = requests.get(url, headers=headers, params=querystring)
 			results = response.json()
 
