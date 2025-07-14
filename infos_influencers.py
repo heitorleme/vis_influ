@@ -6,6 +6,9 @@ import io
 from datetime import datetime
 from scipy.stats import norm
 
+def format_milhar(valor):
+    return f"{round(valor):,}".replace(",", ".") if valor is not None else None
+
 # Upload de múltiplos arquivos JSON
 uploaded_files = st.file_uploader("Carregue os arquivos JSON dos influencers", type="json", accept_multiple_files=True)
 
@@ -243,9 +246,6 @@ if uploaded_files:
                 engagement_rate_str = None
     
         # Valores numéricos formatados com separador de milhar (ponto)
-        def format_milhar(valor):
-            return f"{round(valor):,}".replace(",", ".") if valor is not None else None
-
             dados_consolidados[i] = {
                 "Followers": format_milhar(perfil.get("followers")),
                 "Engajamento (%)": engagement_rate_str,
