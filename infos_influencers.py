@@ -46,23 +46,28 @@ def format_milhar(valor):
 # Função para formatar os valores com separador de milhar
 formatador_milhar = FuncFormatter(lambda x, _: f'{int(x):,}'.replace(',', '.'))
 
-# Upload de múltiplos arquivos JSON
-uploaded_files = st.file_uploader("Carregue os arquivos JSON dos influencers", type="json", accept_multiple_files=True)
+abas = st.tabs(["Página Inicial 🏠", "Resumo 📄", "Influencer 👤", "Audiência 📊", "Publicações 📝"])
 
-# Inicialização
-influencers = []
-influencers_ficheiros = {}
+with abas[0]:
+	# Upload de múltiplos arquivos JSON
+	uploaded_files = st.file_uploader("Carregue os arquivos JSON dos influencers", type="json", accept_multiple_files=True)
 
-if uploaded_files:
-	for file in uploaded_files:
-		filename = file.name
-		partes = filename.split("_")
-		if len(partes) > 1:
-			influencer = partes[1][:-5]  # Remove .json
-			influencers.append(influencer)
-			influencers_ficheiros[influencer] = file
-		else:
-			st.warning(f"O arquivo '{filename}' não segue o padrão esperado.")
+	# Inicialização
+	influencers = []
+	influencers_ficheiros = {}
+
+	if uploaded_files:
+		for file in uploaded_files:
+			filename = file.name
+			partes = filename.split("_")
+			if len(partes) > 1:
+				influencer = partes[1][:-5]  # Remove .json
+				influencers.append(influencer)
+				influencers_ficheiros[influencer] = file
+			else:
+				st.warning(f"O arquivo '{filename}' não segue o padrão esperado.")
+	else:
+	st.info("Por favor, carregue arquivos JSON para começar.")
 
     # Seleção do número de registros por influencer
 	top_n = st.selectbox("Quantas cidades deseja exibir por influencer?", [5, 10, 15, 20], index=0)
@@ -475,6 +480,3 @@ if uploaded_files:
 
 	# Exibir no Streamlit
 	st.table(df_top_interesses_formatado)
-
-else:
-	st.info("Por favor, carregue arquivos JSON para começar.")
