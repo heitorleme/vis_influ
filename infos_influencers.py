@@ -527,7 +527,8 @@ with abas[1]:
 			})
 
 		except Exception as e:
-			st.warning(f"Erro ao processar dados de {i}: {e}")
+			st.error(f"❌ Erro ao processar dados de {i}: {e}")
+			st.text(traceback.format_exc())
 	
 	# Criar DataFrame final
 	df_resultado = pd.DataFrame(lista_consolidada)
