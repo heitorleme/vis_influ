@@ -515,7 +515,7 @@ with abas[1]:
 
 			dispersion = perfis_e_dispersoes.get(username, "N/A")
 			alcance = format_milhar(data["user_profile"].get("avg_reels_plays"))
-			#classe_social = perfil.get("classe_social", "N/A")
+			classe_social = df_classes_formatado.get("influencer", "N/A")
 			#escolaridade = perfil.get("escolaridade", "N/A")
 	
 			interesses = df_top_interesses_formatado.loc[
