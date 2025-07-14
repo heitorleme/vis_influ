@@ -252,7 +252,7 @@ if uploaded_files:
         df_consolidado.rename(columns={"index": "influencer"}, inplace=True)
         
         # Exibir no Streamlit
-        st.dataframe(dist_df)
+        st.dataframe(df_consolidado)
     except:
         st.warning(f"Erro ao processar dados: {e}")
     
