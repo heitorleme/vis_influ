@@ -265,8 +265,65 @@ if uploaded_files:
         
         # Exibir no Streamlit
         st.dataframe(df_consolidado)
+        
     except:
         st.warning(f"Erro ao processar dados: {e}")
+
+    # ============================
+    # SEÇÃO: Histórico (6 meses) 📈
+    # ============================
+    for i in influencers_ficheiros.keys():
+    try:
+        file = influencers_ficheiros.get(i)
+        file.seek(0)
+        file_bytes = file.read()
+        data = json.load(io.BytesIO(file_bytes))
+        perfil = data.get("user_profile", {})
+        stat_history = perfil.get("stat_history", [])
+
+        if not stat_history:
+            st.info(f"Sem dados históricos para {i}")
+            continue
+
+        # Converte o histórico em DataFrame
+        df_hist = pd.DataFrame(stat_history)
+        df_hist['month'] = pd.to_datetime(df_hist['month'])
+        df_hist = df_hist.sort_values('month')
+
+        st.subheader(f"Evolução histórica - {i}")
+
+        # Gráfico: Followers
+        fig1, ax1 = plt.subplots(figsize=(8, 4))
+        ax1.plot(df_hist['month'], df_hist['followers'], marker='o')
+        ax1.set_title('Followers')
+        ax1.set_xlabel('Mês')
+        ax1.set_ylabel('Followers')
+        ax1.grid(True)
+        fig1.autofmt_xdate()
+        st.pyplot(fig1)
+
+        # Gráfico: Média de Likes
+        fig2, ax2 = plt.subplots(figsize=(8, 4))
+        ax2.plot(df_hist['month'], df_hist['avg_likes'], color='green', marker='o')
+        ax2.set_title('Média de Likes')
+        ax2.set_xlabel('Mês')
+        ax2.set_ylabel('Likes')
+        ax2.grid(True)
+        fig2.autofmt_xdate()
+        st.pyplot(fig2)
+
+        # Gráfico: Engajamento Médio
+        fig3, ax3 = plt.subplots(figsize=(8, 4))
+        ax3.plot(df_hist['month'], df_hist['avg_engagements'], color='orange', marker='o')
+        ax3.set_title('Engajamento Médio')
+        ax3.set_xlabel('Mês')
+        ax3.set_ylabel('Engajamentos')
+        ax3.grid(True)
+        fig3.autofmt_xdate()
+        st.pyplot(fig3)
+
+    except Exception as e:
+        st.warning(f"Erro ao gerar gráficos para {i}: {e}")
     
 else:
     st.info("Por favor, carregue arquivos JSON para começar.")
