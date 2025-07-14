@@ -491,7 +491,6 @@ with abas[1]:
 	lista_consolidada = []
 
 	for i in influencers_ficheiros.keys():
-		st.write(f"🔍 Processando arquivo: {i}")
 		try:
 			file = influencers_ficheiros.get(i)
 			file.seek(0)
@@ -499,16 +498,12 @@ with abas[1]:
 	
 			# Carrega o conteúdo JSON como dicionário
 			data = json.load(io.BytesIO(file_bytes))
-
-			st.write(f"✅ user_profile: {data.get('user_profile')}")
 			
 			username = data["user_profile"]["username"]
 			nome = data["user_profile"]["fullname"]
 
-			st.write(f"✅ username: {username}")
-
-			#dispersion = perfis_e_dispersoes.get(username, "N/A")
-			#alcance = format_milhar(perfil.get("avg_reels_plays"))
+			dispersion = perfis_e_dispersoes.get(username, "N/A")
+			alcance = format_milhar(data["user_profile"].get("avg_reels_plays"))
 			#classe_social = perfil.get("classe_social", "N/A")
 			#escolaridade = perfil.get("escolaridade", "N/A")
 	
@@ -521,9 +516,9 @@ with abas[1]:
 			lista_consolidada.append({
 				"Influencer (Username)": username,
 				"Influencer (Nome)": nome,
-				#"Dispersão de interações": dispersion,
-				#"Alcance médio esperado por post": alcance,
-				#"Interesses da audiência": interesses
+				"Dispersão de interações": dispersion,
+				"Alcance médio esperado por post": alcance,
+				"Interesses da audiência": interesses
 			})
 
 		except Exception as e:
