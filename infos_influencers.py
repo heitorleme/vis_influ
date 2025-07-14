@@ -497,6 +497,8 @@ with abas[1]:
 	
 			# Carrega o conteúdo JSON como dicionário
 			data = json.load(io.BytesIO(file_bytes))
+
+			st.write(f"user_profile de {i}: {data.get('user_profile')}")
 			
 			username = data["user_profile"]["username"]
 			nome = data["user_profile"]["fullname"]
