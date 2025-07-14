@@ -500,8 +500,8 @@ with abas[1]:
 			
 			username = data["user_profile"]["username"]
 			nome = data["user_profile"]["fullname"]
-			dispersion = perfis_e_dispersoes.get(username, "N/A")
-			alcance = format_milhar(perfil.get("avg_reels_plays"))
+			#dispersion = perfis_e_dispersoes.get(username, "N/A")
+			#alcance = format_milhar(perfil.get("avg_reels_plays"))
 			#classe_social = perfil.get("classe_social", "N/A")
 			#escolaridade = perfil.get("escolaridade", "N/A")
 	
@@ -514,13 +514,13 @@ with abas[1]:
 			lista_consolidada.append({
 				"Influencer (Username)": username,
 				"Influencer (Nome)": nome,
-				"Dispersão de interações": dispersion,
-				"Alcance médio esperado por post": alcance,
-				"Interesses da audiência": interesses
+				#"Dispersão de interações": dispersion,
+				#"Alcance médio esperado por post": alcance,
+				#"Interesses da audiência": interesses
 			})
 
 		except Exception as e:
-			print(f"Erro ao processar dados de {i}: {e}")
+			st.warning(f"Erro ao processar dados de {i}: {e}")
 	
 	# Criar DataFrame final
 	df_resultado = pd.DataFrame(lista_consolidada)
