@@ -425,7 +425,7 @@ if uploaded_files:
 	
 	            # Formatando como string: "Interesse (XX,YY%)"
 				interesses_formatados = "\n".join([
-					f"{entry['name']} ({entry['weight']:.2f}%)"
+					f"{entry['name']} ({entry['weight'] * 100:.2f}%)"
 					for entry in sorted_interests
 					if 'name' in entry and 'weight' in entry
 				])
