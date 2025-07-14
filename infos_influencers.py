@@ -8,6 +8,7 @@ from scipy.stats import norm
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FuncFormatter
 import requests
+import traceback
 
 # Dicionário de tradução dos interesses
 interests_translation = {
@@ -490,6 +491,7 @@ with abas[1]:
 	lista_consolidada = []
 
 	for i in influencers_ficheiros.keys():
+		st.write(f"🔍 Processando arquivo: {i}")
 		try:
 			file = influencers_ficheiros.get(i)
 			file.seek(0)
@@ -498,10 +500,13 @@ with abas[1]:
 			# Carrega o conteúdo JSON como dicionário
 			data = json.load(io.BytesIO(file_bytes))
 
-			st.write(f"user_profile de {i}: {data.get('user_profile')}")
+			st.write(f"✅ user_profile: {data.get('user_profile')}")
 			
 			username = data["user_profile"]["username"]
 			nome = data["user_profile"]["fullname"]
+
+			st.write(f"✅ username: {username}")
+
 			#dispersion = perfis_e_dispersoes.get(username, "N/A")
 			#alcance = format_milhar(perfil.get("avg_reels_plays"))
 			#classe_social = perfil.get("classe_social", "N/A")
