@@ -419,12 +419,12 @@ if uploaded_files:
 			df_influ = pd.read_json(io.BytesIO(file_bytes))
 
             # Interesses - Top 5
-        	interests_entries = df_influ.get("audience_followers", {}).get("data", {}).get("audience_interests", [])
-        	if isinstance(interests_entries, list):
-	            sorted_interests = sorted(interests_entries, key=lambda x: x.get("weight", 0), reverse=True)[:5]
-	            df_interests = pd.DataFrame(sorted_interests)
-	            df_interests["influencer"] = i
-	            df_top_interesses = pd.concat([df_top_interesses, df_interests], ignore_index=True)
+			interests_entries = df_influ.get("audience_followers", {}).get("data", {}).get("audience_interests", [])
+			if isinstance(interests_entries, list):
+				sorted_interests = sorted(interests_entries, key=lambda x: x.get("weight", 0), reverse=True)[:5]
+				df_interests = pd.DataFrame(sorted_interests)
+				df_interests["influencer"] = i
+				df_top_interesses = pd.concat([df_top_interesses, df_interests], ignore_index=True)
 
 		except Exception as e:
 			st.warning(f"Erro ao processar dados de {i}: {e}")
