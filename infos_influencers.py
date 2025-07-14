@@ -5,6 +5,7 @@ import json
 import io
 from datetime import datetime
 from scipy.stats import norm
+import matplotlib.pyplot as plt
 
 def format_milhar(valor):
     return f"{round(valor):,}".replace(",", ".") if valor is not None else None
