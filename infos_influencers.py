@@ -424,10 +424,10 @@ if uploaded_files:
 				sorted_interests = sorted(interests_entries, key=lambda x: x.get("weight", 0), reverse=True)[:5]
 	
 	            # Formatando como string: "Interesse (XX,YY%)"
-				interesses_formatados = "\n".join([
-					f"{entry['name']} ({entry['weight'] * 100:.2f}%)"
-					for entry in sorted_interests
-					if 'name' in entry and 'weight' in entry
+				interesses_formatados = "".join([
+				    f"{entry['name']} ({entry['weight'] * 100:.2f}%)" + (",\n" if idx < len(sorted_interests) - 1 else "")
+				    for idx, entry in enumerate(sorted_interests)
+				    if 'name' in entry and 'weight' in entry
 				])
 	
 				df_top_interesses_formatado = pd.concat([
