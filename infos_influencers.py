@@ -423,20 +423,25 @@ if uploaded_files:
 			if isinstance(interests_entries, list):
 				sorted_interests = sorted(interests_entries, key=lambda x: x.get("weight", 0), reverse=True)[:5]
 	
-	            # Formatando como string: "Interesse (XX,YY%)"
-				interesses_formatados = "\n".join([
-				    f"{entry['name']} ({entry['weight'] * 100:.2f}%)" + ("," if idx < len(sorted_interests) - 1 else "")
-				    for idx, entry in enumerate(sorted_interests)
-				    if 'name' in entry and 'weight' in entry
-				])
-	
-				df_top_interesses_formatado = pd.concat([
-					df_top_interesses_formatado,
-					pd.DataFrame([{
-						"influencer": i,
-						"interesses_formatados": interesses_formatados
-					}])
-				], ignore_index=True)
+			# Formatando os interesses com vírgula nas quatro primeiras linhas e quebra de linha (\n)
+			interesses_formatados = "\n".join([
+				f"{entry['name']} ({entry['weight'] * 100:.2f}%)" + ("," if idx < len(sorted_interests) - 1 else "")
+				for idx, entry in enumerate(sorted_interests)
+				if 'name' in entry and 'weight' in entry
+			])
+		
+		# Garantir que é uma string real com \n, não escapada
+		interesses_formatados = interesses_formatados.encode().decode("unicode_escape")
+		
+		# Montar a linha do DataFrame
+		df_top_interesses_formatado = pd.concat([
+			df_top_interesses_formatado,
+			pd.DataFrame([{
+		    	"influencer": i,
+		    	"interesses_formatados": interesses_formatados
+			}])
+		], ignore_index=True)
+
 		except Exception as e:
 			st.warning(f"Erro ao processar dados de {i}: {e}")
 
