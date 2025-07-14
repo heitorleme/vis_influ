@@ -430,17 +430,17 @@ if uploaded_files:
 				if 'name' in entry and 'weight' in entry
 			])
 		
-		# Garantir que é uma string real com \n, não escapada
-		interesses_formatados = interesses_formatados.encode().decode("unicode_escape")
-		
-		# Montar a linha do DataFrame
-		df_top_interesses_formatado = pd.concat([
-			df_top_interesses_formatado,
-			pd.DataFrame([{
-		    	"influencer": i,
-		    	"interesses_formatados": interesses_formatados
-			}])
-		], ignore_index=True)
+			# Garantir que é uma string real com \n, não escapada
+			interesses_formatados = interesses_formatados.encode().decode("unicode_escape")
+			
+			# Montar a linha do DataFrame
+			df_top_interesses_formatado = pd.concat([
+				df_top_interesses_formatado,
+				pd.DataFrame([{
+			    	"influencer": i,
+			    	"interesses_formatados": interesses_formatados
+				}])
+			], ignore_index=True)
 
 		except Exception as e:
 			st.warning(f"Erro ao processar dados de {i}: {e}")
