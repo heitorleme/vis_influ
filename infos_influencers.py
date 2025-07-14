@@ -529,7 +529,8 @@ with abas[1]:
 				"Influencer (Nome)": nome,
 				"Dispersão de interações": dispersion,
 				"Alcance médio esperado por post": alcance,
-				"Interesses da audiência": interesses
+				"Interesses da audiência": interesses,
+				"Classe social": classe_social
 			})
 
 		except Exception as e:
