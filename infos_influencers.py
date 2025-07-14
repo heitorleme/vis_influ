@@ -409,6 +409,8 @@ if uploaded_files:
     # ============================
 	st.subheader("Interesses da Audiência 👫")
 
+	df_top_interesses = pd.DataFrame()
+
 	for i in influencers_ficheiros.keys():
 		try:
 			file = influencers_ficheiros.get(i)
@@ -423,6 +425,9 @@ if uploaded_files:
 				df_interesses = pd.DataFrame(sorted_interests)
 				df_interesses["influencer"] = i
 				df_top_interesses = pd.concat([df_top_interesses, df_interesses], ignore_index=True)
+			
+			# Exibir no Streamlit
+			st.dataframe(dist_df)
 
 		except Exception as e:
 			st.warning(f"Erro ao processar dados de {i}: {e}")
