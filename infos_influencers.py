@@ -232,26 +232,29 @@ if uploaded_files:
             file.seek(0)
             file_bytes = file.read()
             df_influ = pd.read_json(io.BytesIO(file_bytes))
-    
-            # Obtém os valores únicos ou médios conforme necessário
-            dados_consolidados[i] = {
-                "followers": df_influ.get("followers", pd.Series([None])).mean(),
-                "engagement_rate": df_influ.get("engagement_rate", pd.Series([None])).mean(),
-                "avg_likes": df_influ.get("avg_likes", pd.Series([None])).mean(),
-                "avg_comments": df_influ.get("avg_comments", pd.Series([None])).mean(),
-                "avg_reels_plays": df_influ.get("avg_reels_plays", pd.Series([None])).mean(),
-                }
-
-                # Converte o dicionário consolidado em DataFrame
-                df_consolidado = pd.DataFrame.from_dict(dados_consolidados, orient='index')
-                df_consolidado.reset_index(inplace=True)
-                df_consolidado.rename(columns={"index": "influencer"}, inplace=True)
-        
-                # Exibir no Streamlit
-                st.dataframe(dist_df)
-        
-            except Exception as e:
+            
+        except Exception as e:
                 st.warning(f"Erro ao processar dados de {i}: {e}")
+
+    try:
+        # Obtém os valores únicos ou médios conforme necessário
+        dados_consolidados[i] = {
+            "followers": df_influ.get("followers", pd.Series([None])).mean(),
+            "engagement_rate": df_influ.get("engagement_rate", pd.Series([None])).mean(),
+            "avg_likes": df_influ.get("avg_likes", pd.Series([None])).mean(),
+            "avg_comments": df_influ.get("avg_comments", pd.Series([None])).mean(),
+            "avg_reels_plays": df_influ.get("avg_reels_plays", pd.Series([None])).mean(),
+            }
+
+        # Converte o dicionário consolidado em DataFrame
+        df_consolidado = pd.DataFrame.from_dict(dados_consolidados, orient='index')
+        df_consolidado.reset_index(inplace=True)
+        df_consolidado.rename(columns={"index": "influencer"}, inplace=True)
+        
+        # Exibir no Streamlit
+        st.dataframe(dist_df)
+    except:
+        st.warning(f"Erro ao processar dados: {e}")
     
 else:
     st.info("Por favor, carregue arquivos JSON para começar.")
