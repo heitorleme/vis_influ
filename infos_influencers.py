@@ -456,13 +456,10 @@ if uploaded_files:
 	
 			# Formatando os interesses com tradução, vírgulas e quebras de linha
 			interesses_formatados = "  \n".join([
-				f"{interests_translation.get(entry['name'], entry['name'])} ({entry['weight'] * 100:.2f}%)".encode("latin-1", errors="ignore").decode("latin-1") + ("," if idx < len(sorted_interests) - 1 else "")
+				f"{interests_translation.get(entry['name'], entry['name'])} ({entry['weight'] * 100:.2f}%)" + ("," if idx < len(sorted_interests) - 1 else "")
 				for idx, entry in enumerate(sorted_interests)
 				if 'name' in entry and 'weight' in entry
 			])
-	
-			# Garantir que é uma string real com \n, não escapada
-			interesses_formatados = interesses_formatados.encode().decode("unicode_escape")
 	
 			# Montar a linha do DataFrame
 			df_top_interesses_formatado = pd.concat([
