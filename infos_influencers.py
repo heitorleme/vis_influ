@@ -251,7 +251,7 @@ if uploaded_files:
 				comments_por_post = []
 
 				# Alterar a query para o perfil e obter a resposta
-				querystring = i                
+				querystring = {"username_or_id_or_url":perfil}         
 				response = requests.get(url, headers=headers, params=querystring)
 				results = response.json()
 
