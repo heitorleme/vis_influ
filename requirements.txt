@@ -4,3 +4,4 @@ streamlit
 xlsxwriter
 openpyxl
 scipy
+matplotlib
