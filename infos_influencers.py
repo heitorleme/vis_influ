@@ -218,5 +218,40 @@ if uploaded_files:
         except Exception as e:
             st.error(f"Erro ao carregar ou processar a planilha de educação: {e}")
 
+    # ============================
+    # SEÇÃO: Estatísticas básicas (visualizações, engajamento, etc) 📚
+    # ============================
+    st.subheader("Análise de Educação por Influencer 📚")
+
+    # Dicionário para consolidar os dados
+    dados_consolidados = {}
+    
+    for i in influencers_ficheiros.keys():
+        try:
+            file = influencers_ficheiros.get(i)
+            file.seek(0)
+            file_bytes = file.read()
+            df_influ = pd.read_json(io.BytesIO(file_bytes))
+    
+            # Obtém os valores únicos ou médios conforme necessário
+            dados_consolidados[i] = {
+                "followers": df_influ.get("followers", pd.Series([None])).mean(),
+                "engagement_rate": df_influ.get("engagement_rate", pd.Series([None])).mean(),
+                "avg_likes": df_influ.get("avg_likes", pd.Series([None])).mean(),
+                "avg_comments": df_influ.get("avg_comments", pd.Series([None])).mean(),
+                "avg_reels_plays": df_influ.get("avg_reels_plays", pd.Series([None])).mean(),
+                }
+
+                # Converte o dicionário consolidado em DataFrame
+                df_consolidado = pd.DataFrame.from_dict(dados_consolidados, orient='index')
+                df_consolidado.reset_index(inplace=True)
+                df_consolidado.rename(columns={"index": "influencer"}, inplace=True)
+        
+                # Exibir no Streamlit
+                st.dataframe(dist_df)
+        
+            except Exception as e:
+                st.warning(f"Erro ao processar dados de {i}: {e}")
+    
 else:
     st.info("Por favor, carregue arquivos JSON para começar.")
