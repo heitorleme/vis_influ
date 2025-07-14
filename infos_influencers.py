@@ -235,14 +235,23 @@ if uploaded_files:
         # Carrega o conteúdo como JSON (dict)
             data = json.load(io.BytesIO(file_bytes))
             perfil = data.get("user_profile", {})
+
+            engagement_rate = perfil.get("engagement_rate")
+            if engagement_rate is not None:
+                engagement_rate_str = f"{round(engagement_rate * 100, 2)}%"
+            else:
+                engagement_rate_str = None
     
-            # Extrai os dados diretamente do dicionário
+        # Valores numéricos formatados com separador de milhar (ponto)
+        def format_milhar(valor):
+            return f"{round(valor):,}".replace(",", ".") if valor is not None else None
+
             dados_consolidados[i] = {
-                "followers": perfil.get("followers"),
-                "engagement_rate": perfil.get("engagement_rate"),
-                "avg_likes": perfil.get("avg_likes"),
-                "avg_comments": perfil.get("avg_comments"),
-                "avg_reels_plays": perfil.get("avg_reels_plays"),
+                "Followers": format_milhar(perfil.get("followers")),
+                "Engajamento (%)": engagement_rate_str,
+                "Média de Likes": format_milhar(perfil.get("avg_likes")),
+                "Média de Comments": format_milhar(perfil.get("avg_comments")),
+                "Média de Views (Reels)": format_milhar(perfil.get("avg_reels_plays")),
             }
             
         except Exception as e:
