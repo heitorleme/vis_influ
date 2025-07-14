@@ -254,6 +254,8 @@ if uploaded_files:
                 
 				response = requests.get(url, headers=headers, params=querystring)
 
+				n_posts = min(12, len(results["data"]["items"]))
+
                 # Adicionar os dados dos posts às listas
 				for i in range(n_posts):
 					likes_por_post.append(results["data"]["items"][i]["like_count"])
