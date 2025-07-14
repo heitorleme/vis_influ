@@ -6,9 +6,13 @@ import io
 from datetime import datetime
 from scipy.stats import norm
 import matplotlib.pyplot as plt
+from matplotlib.ticker import FuncFormatter
 
 def format_milhar(valor):
     return f"{round(valor):,}".replace(",", ".") if valor is not None else None
+
+# Função para formatar os valores com separador de milhar
+formatador_milhar = FuncFormatter(lambda x, _: f'{int(x):,}'.replace(',', '.'))
 
 # Upload de múltiplos arquivos JSON
 uploaded_files = st.file_uploader("Carregue os arquivos JSON dos influencers", type="json", accept_multiple_files=True)
@@ -299,26 +303,18 @@ if uploaded_files:
             ax1.set_title('Followers')
             ax1.set_xlabel('Mês')
             ax1.set_ylabel('Followers')
+            ax1.yaxis.set_major_formatter(formatador_milhar)  # aplica o formatador aqui
             ax1.grid(True)
             fig1.autofmt_xdate()
             st.pyplot(fig1)
-    
-            # Gráfico: Média de Likes
-            fig2, ax2 = plt.subplots(figsize=(8, 4))
-            ax2.plot(df_hist['month'], df_hist['avg_likes'], color='green', marker='o')
-            ax2.set_title('Média de Likes')
-            ax2.set_xlabel('Mês')
-            ax2.set_ylabel('Likes')
-            ax2.grid(True)
-            fig2.autofmt_xdate()
-            st.pyplot(fig2)
-    
+            
             # Gráfico: Engajamento Médio
             fig3, ax3 = plt.subplots(figsize=(8, 4))
             ax3.plot(df_hist['month'], df_hist['avg_engagements'], color='orange', marker='o')
             ax3.set_title('Engajamento Médio')
             ax3.set_xlabel('Mês')
             ax3.set_ylabel('Engajamentos')
+            ax3.yaxis.set_major_formatter(formatador_milhar)  # aplica o formatador aqui também
             ax3.grid(True)
             fig3.autofmt_xdate()
             st.pyplot(fig3)
