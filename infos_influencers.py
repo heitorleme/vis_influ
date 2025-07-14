@@ -276,10 +276,23 @@ with abas[2]:
 
             # Criar DataFrame a partir da lista
 			dist_df = pd.DataFrame(dist_list)
+			
+			# Formatar os dados em uma única célula com quebras de linha
+			df_educacao_formatado = pd.DataFrame([
+			    {
+			        "influencer": row["Influencer"],
+			        "educacao_formatada": "  \n".join([
+			            f"< 5 anos: {row['< 5 anos']:.2f}%",
+			            f"5–9 anos: {row['5-9 anos']:.2f}%",
+			            f"9–12 anos: {row['9-12 anos']:.2f}%",
+			            f"> 12 anos: {row['> 12 anos']:.2f}%"
+			        ])
+			    }
+			    for _, row in dist_df.iterrows()
+			])
 
-            # Exibir no Streamlit
-			st.dataframe(dist_df)
-
+			# Exibir no Streamlit
+			st.table(df_educacao_formatado)
 		except Exception as e:
 			st.error(f"Erro ao carregar ou processar a planilha de educação: {e}")
 
