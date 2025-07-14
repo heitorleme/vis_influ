@@ -9,6 +9,37 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import FuncFormatter
 import requests
 
+# Dicionário de tradução dos interesses
+interests_translation = {
+	"Activewear": "Roupas Esportivas",
+	"Friends, Family & Relationships": "Amigos, Família e Relacionamentos",
+	"Clothes, Shoes, Handbags & Accessories": "Moda",
+	"Beauty & Cosmetics": "Beleza e Cosméticos",
+	"Camera & Photography": "Fotografia",
+	"Toys, Children & Baby": "Brinquedos, Crianças e Bebês",
+	"Television & Film": "Televisão e Filmes",
+	"Restaurants, Food & Grocery": "Restaurantes e Gastronomia",
+	"Music": "Música",
+	"Fitness & Yoga": "Fitness e Yoga",
+	"Travel, Tourism & Aviation": "Turismo e Aviação",
+	"Pets": "Animais de Estimação",
+	"Cars & Motorbikes": "Carros e Motocicletas",
+	"Beer, Wine & Spirits": "Cerveja, Vinho e Bebidas Alcoólicas",
+	"Art & Design": "Arte e Design",
+	"Sports": "Esportes",
+	"Electronics & Computers": "Eletrônicos e Computadores",
+	"Healthy Lifestyle": "Estilo de Vida Saudável",
+	"Shopping & Retail": "Compras e Varejo",
+	"Coffee, Tea & Beverages": "Café, Chá e Bebidas Quentes",
+	"Jewellery & Watches": "Joias e Relógios",
+	"Luxury Goods": "Artigos de Luxo",
+	"Home Decor, Furniture & Garden": "Decoração, Móveis e Jardim",
+	"Wedding": "Casamento",
+	"Gaming": "Jogos Digitais",
+	"Business & Careers": "Negócios e Carreiras",
+	"Healthcare & Medicine": "Saúde e Medicina"
+}
+
 def format_milhar(valor):
 	return f"{round(valor):,}".replace(",", ".") if valor is not None else None
 
@@ -418,30 +449,30 @@ if uploaded_files:
 			file_bytes = file.read()
 			df_influ = pd.read_json(io.BytesIO(file_bytes))
 	
-	        # Interesses - Top 5
+			# Interesses - Top 5
 			interests_entries = df_influ.get("audience_followers", {}).get("data", {}).get("audience_interests", [])
 			if isinstance(interests_entries, list):
 				sorted_interests = sorted(interests_entries, key=lambda x: x.get("weight", 0), reverse=True)[:5]
 	
-			# Formatando os interesses com vírgula nas quatro primeiras linhas e quebra de linha (\n)
+			# Formatando os interesses com tradução, vírgulas e quebras de linha
 			interesses_formatados = "  \n".join([
-				f"{entry['name']} ({entry['weight'] * 100:.2f}%)" + ("," if idx < len(sorted_interests) - 1 else "")
+				f"{interests_translation.get(entry['name'], entry['name'])} ({entry['weight'] * 100:.2f}%)" + ("," if idx < len(sorted_interests) - 1 else "")
 				for idx, entry in enumerate(sorted_interests)
 				if 'name' in entry and 'weight' in entry
 			])
-		
+	
 			# Garantir que é uma string real com \n, não escapada
 			interesses_formatados = interesses_formatados.encode().decode("unicode_escape")
-			
+	
 			# Montar a linha do DataFrame
 			df_top_interesses_formatado = pd.concat([
 				df_top_interesses_formatado,
 				pd.DataFrame([{
-			    	"influencer": i,
-			    	"interesses_formatados": interesses_formatados
+					"influencer": i,
+					"interesses_formatados": interesses_formatados
 				}])
 			], ignore_index=True)
-
+	
 		except Exception as e:
 			st.warning(f"Erro ao processar dados de {i}: {e}")
 
