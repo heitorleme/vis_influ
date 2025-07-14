@@ -44,6 +44,10 @@ interests_translation = {
 def format_milhar(valor):
 	return f"{round(valor):,}".replace(",", ".") if valor is not None else None
 
+def get_classes_sociais_formatadas(df, nome_influencer):
+    resultado = df.loc[df["influencer"] == nome_influencer, "classes_sociais_formatadas"].values
+    return resultado[0] if len(resultado) > 0 else "N/A"
+
 # Função para formatar os valores com separador de milhar
 formatador_milhar = FuncFormatter(lambda x, _: f'{int(x):,}'.replace(',', '.'))
 
@@ -515,7 +519,7 @@ with abas[1]:
 
 			dispersion = perfis_e_dispersoes.get(username, "N/A")
 			alcance = format_milhar(data["user_profile"].get("avg_reels_plays"))
-			classe_social = df_classes_formatado.get("influencer", "N/A")
+			classe_social = get_classes_sociais_formatadas(df_classes_formatado, username)
 			#escolaridade = perfil.get("escolaridade", "N/A")
 	
 			interesses = df_top_interesses_formatado.loc[
