@@ -149,21 +149,21 @@ with abas[2]:
 			result = result.round(2)
 
             # Formatar resultado como string com quebras de linha e %
-		    df_classes_formatado = pd.DataFrame([
-		        {
-		            "influencer": idx,
-		            "classes_sociais_formatadas": "  \n".join([
-		                f"Classes D e E: {row['normalized_classe_de']:.2f}%",
-		                f"Classe C: {row['normalized_classe_c']:.2f}%",
-		                f"Classe B: {row['normalized_classe_b']:.2f}%",
-		                f"Classe A: {row['normalized_classe_a']:.2f}%"
-		            ])
-		        }
-		        for idx, row in result.iterrows()
-		    ])
+			df_classes_formatado = pd.DataFrame([
+				{
+					"influencer": idx,
+					"classes_sociais_formatadas": "  \n".join([
+						f"Classes D e E: {row['normalized_classe_de']:.2f}%",
+						f"Classe C: {row['normalized_classe_c']:.2f}%",
+						f"Classe B: {row['normalized_classe_b']:.2f}%",
+						f"Classe A: {row['normalized_classe_a']:.2f}%"
+					])
+				}
+				for idx, row in result.iterrows()
+			])
 		
 		    # Exibir tabela formatada
-		    st.table(df_classes_formatado)
+			st.table(df_classes_formatado)
 
 		except Exception as e:
 			st.error(f"Erro ao carregar ou processar a planilha de classes sociais: {e}")
