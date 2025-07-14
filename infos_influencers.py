@@ -275,19 +275,19 @@ if uploaded_files:
 
         except Exception as e:
             st.warning(f"Erro ao processar dados de {i}: {e}")
-
+		
 	try:
     # Transformar o dicionário em uma lista de dicionários
-    		dist_list = [{'Perfil': k, 'Dispersão': v} for k, v in perfis_e_dispersoes.items()]
+    	dist_list = [{'Perfil': k, 'Dispersão': v} for k, v in perfis_e_dispersoes.items()]
     
     # Criar DataFrame a partir da lista
-    		dist_df = pd.DataFrame(dist_list)
+    	dist_df = pd.DataFrame(dist_list)
 
     # Exibir no Streamlit
-    		st.dataframe(dist_df)
+    	st.dataframe(dist_df)
 
 	except Exception as e:
-    		st.warning(f"Ocorreu um erro ao criar o DataFrame: {e}")
+    	st.warning(f"Ocorreu um erro ao criar o DataFrame: {e}")
 
     # ============================
     # SEÇÃO: Estatísticas básicas (visualizações, engajamento, etc) 📚
