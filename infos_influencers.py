@@ -513,7 +513,7 @@ with abas[1]:
 			#escolaridade = perfil.get("escolaridade", "N/A")
 	
 			interesses = df_top_interesses_formatado.loc[
-				df_top_interesses_formatado["username"] == username,
+				df_top_interesses_formatado["influencer"] == username,
 				"interesses_formatados"
 			].values
 			interesses = interesses[0] if len(interesses) > 0 else "N/A"
