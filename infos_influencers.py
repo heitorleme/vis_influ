@@ -516,9 +516,7 @@ with abas[1]:
 				"Influencer (Nome)": nome,
 				"Dispersão de interações": dispersion,
 				"Alcance médio esperado por post": alcance,
-				"Interesses da audiência": interesses,
-				#"Classe social": classe_social,
-				#"Escolaridade": escolaridade
+				"Interesses da audiência": interesses
 			})
 
 		except Exception as e:
@@ -529,4 +527,4 @@ with abas[1]:
 	
 	# Exibir em Streamlit
 	st.title("Consolidação de Influenciadores")
-	st.table(df_resultado)
+	st.dataframe(df_resultado)
