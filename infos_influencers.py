@@ -535,7 +535,6 @@ with abas[1]:
 	output = io.BytesIO()
 	with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
 	    df_resultado.to_excel(writer, index=False, sheet_name='Defesa Influenciadores')
-	    writer.save()
 	    output.seek(0)
 	
 	# Exibir em Streamlit
