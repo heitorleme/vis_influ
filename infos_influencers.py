@@ -61,7 +61,7 @@ with abas[0]:
 			filename = file.name
 			partes = filename.split("_")
 			if len(partes) > 1:
-				influencer = partes[1][:-5]  # Remove .json
+				influencer = partes[1][:-5]  # Remover .json
 				influencers.append(influencer)
 				influencers_ficheiros[influencer] = file
 			else:
@@ -69,6 +69,8 @@ with abas[0]:
 	else:
 		st.info("Por favor, carregue arquivos JSON para começar.")
 
+with abas[2]:
+	
     # Seleção do número de registros por influencer
 	top_n = st.selectbox("Quantas cidades deseja exibir por influencer?", [5, 10, 15, 20], index=0)
 
@@ -441,7 +443,7 @@ with abas[0]:
 			st.warning(f"Erro ao gerar gráficos para {influenciador_selecionado}: {e}")
 			
 	# ============================
-    # SEÇÃO: Extração da credibilidade da audiência 👫
+    # SEÇÃO: Extração de interesses da audiência 👫
     # ============================
 	st.subheader("Interesses da Audiência 👫")
 
@@ -480,3 +482,50 @@ with abas[0]:
 
 	# Exibir no Streamlit
 	st.table(df_top_interesses_formatado)
+
+with abas[1]:
+	# Lista para consolidar os dados
+	lista_final = []
+	
+	for i in influencers_ficheiros.keys():
+	    try:
+	        file = influencers_ficheiros.get(i)
+	        file.seek(0)
+	        file_bytes = file.read()
+	        df_influ = pd.read_json(io.BytesIO(file_bytes))
+	
+	        perfil = df_influ.to_dict(orient="records")[0]  # Supondo que há um registro por arquivo
+	
+	        username = perfil.get("user_profile", {}).get("username", "N/A")
+	        nome = perfil.get("user_profile", {}).get("fullname", "N/A")
+	        dispersao = perfis_e_dispersoes.get(username, "N/A")
+	        alcance = format_milhar(perfil.get("avg_reels_plays"))
+	        
+	        interesses = df_top_interesses_formatado.loc[
+	            df_top_interesses_formatado["username"] == username,
+	            "interesses_formatados"
+	        ].values
+	        interesses = interesses[0] if len(interesses) > 0 else "N/A"
+	
+	        classe_social = perfil.get("classe_social", "N/A")
+	        escolaridade = perfil.get("escolaridade", "N/A")
+	
+	        lista_final.append({
+	            "Influencer (Username)": username,
+	            "Influencer (Nome)": nome,
+	            "Dispersão de interações": dispersao,
+	            "Alcance médio esperado por post": alcance,
+	            "Interesses da audiência": interesses,
+	            "Classe social": classe_social,
+	            "Escolaridade": escolaridade
+	        })
+	
+	    except Exception as e:
+	        st.warning(f"Erro ao processar {i}: {e}")
+	
+	# Criar DataFrame final
+	df_resultado = pd.DataFrame(lista_final)
+	
+	# Exibir em Streamlit
+	st.title("Consolidação de Influenciadores")
+	st.table(df_resultado)
