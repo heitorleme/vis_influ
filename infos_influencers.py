@@ -527,7 +527,25 @@ with abas[1]:
 	
 	# Criar DataFrame final
 	df_resultado = pd.DataFrame(lista_consolidada)
+
+	# Nome do arquivo
+	file_name = "resumo_defesa_influenciadores.xlsx"
+	
+	# Converter o DataFrame para um objeto Excel em memória
+	output = io.BytesIO()
+	with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+	    df_resultado.to_excel(writer, index=False, sheet_name='Defesa Influenciadores')
+	    writer.save()
+	    output.seek(0)
 	
 	# Exibir em Streamlit
 	st.title("Consolidação de Influenciadores")
-	st.dataframe(df_resultado)
+	st.table(df_resultado)
+
+	# Botão de download
+	st.download_button(
+	    label="📥 Baixar tabela de cidades como Excel",
+	    data=output,
+	    file_name=file_name,
+	    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+	)
