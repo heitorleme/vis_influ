@@ -609,7 +609,7 @@ with abas[4]:
 					else:
 						st.warning("Imagem não disponível para este post.")
 					st.markdown(f"**{post.get('text', '')}**")
-			        
+					
 		except Exception as e:
 			st.warning(f"Erro ao buscar publicações para {influenciador_selecionado}: {e}")
 
