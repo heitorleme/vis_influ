@@ -600,27 +600,12 @@ with abas[4]:
 			st.title("Posts recentes - {}".format(influenciador_selecionado))
 
 			# Divide os posts em blocos de 3 colunas
-			for i in range(0, len(recent_posts), 3):
-				cols = st.columns(3)
-				for j, col in enumerate(cols):
-					if i + j < len(recent_posts):
-						post = recent_posts[i + j]
-						with col:
-							st.markdown(f"""
-							<div style="border:1px solid #ddd; border-radius:15px; padding:12px; margin-bottom:20px; box-shadow: 2px 2px 10px rgba(0,0,0,0.05); background-color:#fff;">
-								<div style="display: flex; align-items: center; margin-bottom: 10px;">
-									<img src="{post['user_picture']}" width="35" height="35" style="border-radius:50%; margin-right:10px;">
-									<a href="{post['user_url']}" target="_blank" style="font-weight:600; text-decoration:none; color:#222;">{post['username']}</a>
-								</div>
-								<a href="{post['link']}" target="_blank">
-									<img src="{post['user_picture']}" style="width:100%; border-radius:10px; margin-bottom:10px;" />
-								</a>
-								<p style="font-size:14px; color:#333;">{post['text']}</p>
-								<p style="font-size: 13px; color: #888; margin-top:8px;">
-									❤️ {post['stat']['likes']} 💬 {post['stat']['comments']} 🔁 {post['stat']['shares']}
-								</p>
-								<a href="{post['link']}" target="_blank" style="font-size:13px; color:#3897f0; font-weight:500;">Ver no Instagram</a>
-							</div>""", unsafe_allow_html=True)
+			for post in posts:
+			    with st.container():
+			        st.image(post["img"], use_column_width=True)
+			        st.markdown(f"**{post['caption']}**")
+			        st.button("Curtir ❤️", key=post["img"])
+
 		
 		except Exception as e:
 			st.warning(f"Erro ao buscar publicações para {influenciador_selecionado}: {e}")
