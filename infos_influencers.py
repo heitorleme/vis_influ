@@ -58,8 +58,20 @@ formatador_milhar = FuncFormatter(lambda x, _: f'{int(x):,}'.replace(',', '.'))
 abas = st.tabs(["Página Inicial 🏠", "Resumo 📄", "Influencer 👤", "Audiência 📊", "Publicações 📝"])
 
 with abas[0]:
+	st.title("Análise de influenciadores")
+	st.markdown("### Introdução")
+	st.markdown('''"Este app tem a função de consolidar o processo de extração de dados de influenciadores anteriormente 
+ 				implementado manualmente, caso a caso. O resumo tradicionalmente disponibilizado está disponível na aba
+	 			Resumo, com a opção de download direto de um arquivo Excel. Separamos e adicionamos, ainda, dados e visualizações
+	 			relativas ao Influencer, à Audiência e às Publicações às outras abas."''')
+	
 	# Upload de múltiplos arquivos JSON
 	uploaded_files = st.file_uploader("Carregue os arquivos JSON dos influencers", type="json", accept_multiple_files=True)
+
+	st.markdown("### Como utilizar")
+	st.markdown('''"Os arquivos de input, que devem ser adicionados ao uploader acima, devem ser arquivos .json extraídos
+ 				diretamente do IMAI. Para o processo ser bem-sucedido, os arquivos devem ser nomeados no formato
+	 			json_{perfil do influenciador}.json. Para já, apenas a análise dos perfis do Instagram é funcional."''')
 	
 	# Inicialização
 	influencers = []
@@ -626,7 +638,7 @@ with abas[4]:
 			    texto_links += f"- [{marca}]({url})\n"
 
 			# Exibe o quadro de texto com os links
-			st.markdown("### (amostra) Perfis no Instagram das marcas mencionadas:")
+			st.markdown("### Perfis no Instagram das marcas mencionadas:")
 			st.markdown(texto_links)
 
 			st.markdown("### Métricas das publicações identificadas na amostra:")
