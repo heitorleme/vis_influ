@@ -608,7 +608,7 @@ with abas[4]:
 					if img_url:
 						st.image(img_url, use_container_width=True)
 					else:
-						img_url = posts.get("user_picture")
+						img_url = post.get("user_picture")
 						if img_url:
 							st.image(img_url, use_column_width=True)
 						else:
