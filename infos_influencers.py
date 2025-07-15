@@ -626,9 +626,10 @@ with abas[4]:
 			    texto_links += f"- [{marca}]({url})\n"
 
 			# Exibe o quadro de texto com os links
-			st.markdown("### Perfis no Instagram das marcas mencionadas:")
-			st.text_area("Links gerados:", texto_links, height=200)
+			st.markdown("### (amostra) Perfis no Instagram das marcas mencionadas:")
+			st.markdown(texto_links)
 
+			st.markdown("### Métricas das publicações identificadas na amostra:")
 			col1, col2, col3 = st.columns(3)
 			with col1:
 				st.metric(label="👍 Média de Likes", value=f"{int(likes_total):,}")
@@ -636,7 +637,8 @@ with abas[4]:
 				st.metric(label="💬 Média de Comentários", value=f"{int(comments_total):,}")
 			with col3:
 				st.metric(label="🔁 Média de Shares", value=f"{int(shares_total):,}")
-	
+
+			st.markdown("### Posts:")	
 			# Divide os posts em linhas com 3 colunas cada
 			for row_start in range(0, len(commercial_posts), 3):
 				cols = st.columns(3)
