@@ -600,6 +600,7 @@ with abas[4]:
 			recent_posts = data["user_profile"].get("recent_posts", [])
 			
 			st.title("💰 Posts comerciais - {}".format(influenciador_selecionado))
+			marcas_posts = []
 			likes_posts = []
 			comments_posts = []
 			shares_posts = []
@@ -608,10 +609,22 @@ with abas[4]:
 				likes_posts.append(post["stat"].get("likes", 0))
 				comments_posts.append(post["stat"].get("comments", 0))
 				shares_posts.append(post["stat"].get("shares", 0))
+				marcas_posts.append(post["sponsor"].get("usename", 0))
 
 			likes_total = np.mean(likes_posts)
 			comments_total = np.mean(comments_posts)
 			shares_total = np.mean(shares_posts)
+			marcas_posts = np.unique(marcas_posts)
+
+			# Geração do texto com links formatados em Markdown
+			texto_links = ""
+			for marca in marcas_posts:
+			    url = f"https://www.instagram.com/{marca}"
+			    texto_links += f"- [{marca}]({url})\n"
+
+			# Exibe o quadro de texto com os links
+			st.markdown("### Perfis no Instagram das marcas mencionadas:")
+			st.text_area("Links gerados:", texto_links, height=200)
 
 			col1, col2, col3 = st.columns(3)
 			with col1:
