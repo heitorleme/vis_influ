@@ -586,6 +586,7 @@ with abas[1]:
 # Publicações do Insta
 with abas[4]:
 	# Dropdown para seleção do influenciador
+	influencers_ficheiros = st.session_state.get("influencers_ficheiros", {})
 	influenciador_selecionado = st.selectbox("Selecione um influenciador:", list(influencers_ficheiros.keys()), key="select_influencer_posts")
 	
 	if influenciador_selecionado:
@@ -595,7 +596,7 @@ with abas[4]:
 			file.seek(0)
 			file_bytes = file.read()
 			data = json.load(io.BytesIO(file_bytes))
-			recent_posts = data.get("recent_posts", [])
+			recent_posts = data["user_profile"].get("recent_posts", [])
 
 			st.title("Posts recentes - {}".format(influenciador_selecionado))
 	
