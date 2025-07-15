@@ -600,7 +600,7 @@ with abas[4]:
 			st.title("Posts recentes - {}".format(influenciador_selecionado))
 
 			# Divide os posts em blocos de 3 colunas
-			for post in posts:
+			for post in recent_posts:
 			    with st.container():
 			        st.image(post["img"], use_column_width=True)
 			        st.markdown(f"**{post['caption']}**")
