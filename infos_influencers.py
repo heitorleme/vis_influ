@@ -602,7 +602,7 @@ with abas[4]:
 			# Divide os posts em blocos de 3 colunas
 			cols = st.columns(3)  # Cria 3 colunas lado a lado
 			for i, post in enumerate(recent_posts):
-			    with cols[i % 3]:
+				with cols[i % 3]:
 					img_url = post.get("user_picture")
 					if img_url:
 						st.image(img_url, use_column_width=True)
