@@ -586,7 +586,7 @@ with abas[1]:
 # Publicações do Insta
 with abas[4]:
 	# Dropdown para seleção do influenciador
-	influenciador_selecionado = st.selectbox("Selecione um influenciador:", list(influencers_ficheiros.keys()))
+	influenciador_selecionado = st.selectbox("Selecione um influenciador:", list(influencers_ficheiros.keys()), key="select_influencer_posts")
 	
 	if influenciador_selecionado:
 		try:
@@ -620,8 +620,7 @@ with abas[4]:
 									❤️ {post['stat']['likes']} 💬 {post['stat']['comments']} 🔁 {post['stat']['shares']}
 								</p>
 								<a href="{post['link']}" target="_blank" style="font-size:13px; color:#3897f0; font-weight:500;">Ver no Instagram</a>
-							</div>
-							""", unsafe_allow_html=True)
+							</div>""", unsafe_allow_html=True)
 		
 		except Exception as e:
 			st.warning(f"Erro ao buscar publicações para {influenciador_selecionado}: {e}")
