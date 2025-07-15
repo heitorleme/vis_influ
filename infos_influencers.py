@@ -60,18 +60,19 @@ abas = st.tabs(["Página Inicial 🏠", "Resumo 📄", "Influencer 👤", "Audi�
 with abas[0]:
 	st.title("Análise de influenciadores")
 	st.markdown("### Introdução")
-	st.markdown('''"Este app tem a função de consolidar o processo de extração de dados de influenciadores anteriormente 
+	st.markdown('''Este app tem a função de consolidar o processo de extração de dados de influenciadores anteriormente 
  				implementado manualmente, caso a caso. O resumo tradicionalmente disponibilizado está disponível na aba
 	 			Resumo, com a opção de download direto de um arquivo Excel. Separamos e adicionamos, ainda, dados e visualizações
-	 			relativas ao Influencer, à Audiência e às Publicações às outras abas."''')
-	
-	# Upload de múltiplos arquivos JSON
-	uploaded_files = st.file_uploader("Carregue os arquivos JSON dos influencers", type="json", accept_multiple_files=True)
+	 			relativas ao Influencer, à Audiência e às Publicações às outras abas.''')
 
 	st.markdown("### Como utilizar")
-	st.markdown('''"Os arquivos de input, que devem ser adicionados ao uploader acima, devem ser arquivos .json extraídos
+	st.markdown('''Os arquivos de input devem ser arquivos .json extraídos
  				diretamente do IMAI. Para o processo ser bem-sucedido, os arquivos devem ser nomeados no formato
-	 			json_{perfil do influenciador}.json. Para já, apenas a análise dos perfis do Instagram é funcional."''')
+	 			json_{perfil do influenciador}.json. Para já, apenas a análise dos perfis do Instagram é funcional.''')
+
+	# Upload de múltiplos arquivos JSON
+	st.markdown("### Uploader")
+	uploaded_files = st.file_uploader("Carregue os arquivos JSON dos influencers", type="json", accept_multiple_files=True)
 	
 	# Inicialização
 	influencers = []
