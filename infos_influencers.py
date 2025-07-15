@@ -596,34 +596,70 @@ with abas[4]:
 			file.seek(0)
 			file_bytes = file.read()
 			data = json.load(io.BytesIO(file_bytes))
+			commercial_posts = data["user_profile"].get("commercial_posts", [])
 			recent_posts = data["user_profile"].get("recent_posts", [])
-
+			
+			st.title("Posts comerciais - {}".format(influenciador_selecionado))
+	
+			# Divide os posts em linhas com 3 colunas cada
+			for row_start in range(0, len(commercial_posts), 3):
+				cols = st.columns(3)
+				for i in range(3):
+					if row_start + i >= len(commercial_posts):
+						break
+					post = commercial_posts[row_start + i]
+					with cols[i]:
+						img_url = post.get("thumbnail") or post.get("user_picture")
+						if img_url:
+							st.image(img_url, use_container_width=True)
+						else:
+							st.warning("Imagem não disponível para este post.")
+			
+						# Caption do post
+						st.markdown(f"**{post.get('text', '')}**")
+			
+						# Link e estatísticas
+						link = post.get("link", "#")
+						stats = post.get("stat", {})
+						likes = stats.get("likes", 0)
+						comments = stats.get("comments", 0)
+						shares = stats.get("shares", 0)
+			
+						st.markdown(f"[🔗 Ver publicação]({link})", unsafe_allow_html=True)
+						st.markdown(f"👍 Likes: **{likes}**")
+						st.markdown(f"💬 Comentários: **{comments}**")
+						st.markdown(f"🔁 Compartilhamentos: **{shares}**")
+			
 			st.title("Posts recentes - {}".format(influenciador_selecionado))
 	
-			# Divide os posts em blocos de 3 colunas
-			cols = st.columns(3)  # Cria 3 colunas lado a lado
-			for i, post in enumerate(recent_posts):
-				with cols[i % 3]:
-					img_url = post.get("thumbnail") or post.get("user_picture")
-					if img_url:
-						st.image(img_url, use_container_width=True)
-					else:
-						st.warning("Imagem não disponível para este post.")
-
-					# Caption do post
-					st.markdown(f"**{post.get('text', '')}**")
-
-					# Link e estatísticas
-					link = post.get("link", "#")
-					stats = post.get("stat", {})
-					likes = stats.get("likes", 0)
-					comments = stats.get("comments", 0)
-					shares = stats.get("shares", 0)
-
-					st.markdown(f"[🔗 Ver publicação]({link})", unsafe_allow_html=True)
-					st.markdown(f"👍 Likes: **{likes}**")
-					st.markdown(f"💬 Comentários: **{comments}**")
-					st.markdown(f"🔁 Compartilhamentos: **{shares}**")
+			# Divide os posts em linhas com 3 colunas cada
+			for row_start in range(0, len(recent_posts), 3):
+				cols = st.columns(3)
+				for i in range(3):
+					if row_start + i >= len(recent_posts):
+						break
+					post = recent_posts[row_start + i]
+					with cols[i]:
+						img_url = post.get("thumbnail") or post.get("user_picture")
+						if img_url:
+							st.image(img_url, use_container_width=True)
+						else:
+							st.warning("Imagem não disponível para este post.")
+			
+						# Caption do post
+						st.markdown(f"**{post.get('text', '')}**")
+			
+						# Link e estatísticas
+						link = post.get("link", "#")
+						stats = post.get("stat", {})
+						likes = stats.get("likes", 0)
+						comments = stats.get("comments", 0)
+						shares = stats.get("shares", 0)
+			
+						st.markdown(f"[🔗 Ver publicação]({link})", unsafe_allow_html=True)
+						st.markdown(f"👍 Likes: **{likes}**")
+						st.markdown(f"💬 Comentários: **{comments}**")
+						st.markdown(f"🔁 Compartilhamentos: **{shares}**")
 					
 		except Exception as e:
 			st.warning(f"Erro ao buscar publicações para {influenciador_selecionado}: {e}")
