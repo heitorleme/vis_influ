@@ -641,6 +641,7 @@ with abas[4]:
 					if row_start + i >= len(recent_posts):
 						break
 					post = recent_posts[row_start + i]
+					link = post.get("link", "#")
 					with cols[i]:
 						img_url = post.get("thumbnail") or post.get("user_picture")
 						if img_url:
@@ -655,7 +656,6 @@ with abas[4]:
 						st.markdown(f"**{post.get('text', '')}**")
 			
 						# Link e estatísticas
-						link = post.get("link", "#")
 						stats = post.get("stat", {})
 						likes = stats.get("likes", 0)
 						comments = stats.get("comments", 0)
