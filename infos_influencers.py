@@ -603,8 +603,12 @@ with abas[4]:
 			cols = st.columns(3)  # Cria 3 colunas lado a lado
 			for i, post in enumerate(recent_posts):
 			    with cols[i % 3]:
-			        st.image(post[i].get("user_picture", ""), use_column_width=True)
-			        st.markdown(f"**{post[i].get('text', '')}**")
+			        img_url = post.get("user_picture")
+					if img_url:
+					    st.image(img_url, use_column_width=True)
+					else:
+					    st.warning("Imagem não disponível para este post.")
+			        st.markdown(f"**{post.get('text', '')}**")
 			        
 		except Exception as e:
 			st.warning(f"Erro ao buscar publicações para {influenciador_selecionado}: {e}")
