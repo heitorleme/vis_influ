@@ -599,7 +599,7 @@ with abas[4]:
 			commercial_posts = data["user_profile"].get("commercial_posts", [])
 			recent_posts = data["user_profile"].get("recent_posts", [])
 			
-			st.title("Posts comerciais - {}".format(influenciador_selecionado))
+			st.title("💰 Posts comerciais - {}".format(influenciador_selecionado))
 	
 			# Divide os posts em linhas com 3 colunas cada
 			for row_start in range(0, len(commercial_posts), 3):
@@ -611,7 +611,10 @@ with abas[4]:
 					with cols[i]:
 						img_url = post.get("thumbnail") or post.get("user_picture")
 						if img_url:
-							st.image(img_url, use_container_width=True)
+							st.markdown(
+								f'<a href="{link}" target="_blank"><img src="{img_url}" style="width:100%; border-radius:10px;" /></a>',
+								unsafe_allow_html=True
+							)
 						else:
 							st.warning("Imagem não disponível para este post.")
 			
@@ -625,12 +628,11 @@ with abas[4]:
 						comments = stats.get("comments", 0)
 						shares = stats.get("shares", 0)
 			
-						st.markdown(f"[🔗 Ver publicação]({link})", unsafe_allow_html=True)
 						st.markdown(f"👍 Likes: **{likes}**")
 						st.markdown(f"💬 Comentários: **{comments}**")
 						st.markdown(f"🔁 Compartilhamentos: **{shares}**")
 			
-			st.title("Posts recentes - {}".format(influenciador_selecionado))
+			st.title("⏰ Posts recentes - {}".format(influenciador_selecionado))
 	
 			# Divide os posts em linhas com 3 colunas cada
 			for row_start in range(0, len(recent_posts), 3):
@@ -642,7 +644,10 @@ with abas[4]:
 					with cols[i]:
 						img_url = post.get("thumbnail") or post.get("user_picture")
 						if img_url:
-							st.image(img_url, use_container_width=True)
+							st.markdown(
+								f'<a href="{link}" target="_blank"><img src="{img_url}" style="width:100%; border-radius:10px;" /></a>',
+								unsafe_allow_html=True
+							)
 						else:
 							st.warning("Imagem não disponível para este post.")
 			
@@ -655,8 +660,7 @@ with abas[4]:
 						likes = stats.get("likes", 0)
 						comments = stats.get("comments", 0)
 						shares = stats.get("shares", 0)
-			
-						st.markdown(f"[🔗 Ver publicação]({link})", unsafe_allow_html=True)
+		
 						st.markdown(f"👍 Likes: **{likes}**")
 						st.markdown(f"💬 Comentários: **{comments}**")
 						st.markdown(f"🔁 Compartilhamentos: **{shares}**")
