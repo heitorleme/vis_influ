@@ -604,16 +604,26 @@ with abas[4]:
 			cols = st.columns(3)  # Cria 3 colunas lado a lado
 			for i, post in enumerate(recent_posts):
 				with cols[i % 3]:
-					img_url = post.get("thumbnail")
+					img_url = post.get("thumbnail") or post.get("user_picture")
 					if img_url:
 						st.image(img_url, use_container_width=True)
 					else:
-						img_url = post.get("user_picture")
-						if img_url:
-							st.image(img_url, use_column_width=True)
-						else:
-							st.warning("Imagem não disponível para este post.")
+						st.warning("Imagem não disponível para este post.")
+
+					# Caption do post
 					st.markdown(f"**{post.get('text', '')}**")
+
+					# Link e estatísticas
+					link = post.get("link", "#")
+					stats = post.get("stat", {})
+					likes = stats.get("likes", 0)
+					comments = stats.get("comments", 0)
+					shares = stats.get("shares", 0)
+
+					st.markdown(f"[🔗 Ver publicação]({link})", unsafe_allow_html=True)
+					st.markdown(f"👍 Likes: **{likes}**")
+					st.markdown(f"💬 Comentários: **{comments}**")
+					st.markdown(f"🔁 Compartilhamentos: **{shares}**")
 					
 		except Exception as e:
 			st.warning(f"Erro ao buscar publicações para {influenciador_selecionado}: {e}")
