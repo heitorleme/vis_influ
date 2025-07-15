@@ -609,7 +609,10 @@ with abas[4]:
 				likes_posts.append(post["stat"].get("likes", 0))
 				comments_posts.append(post["stat"].get("comments", 0))
 				shares_posts.append(post["stat"].get("shares", 0))
-				marcas_posts.append(post["sponsor"].get("usename", 0))
+				try:
+					marcas_posts.append(post["sponsor"].get("usename", 0))
+				except:
+					continue
 
 			likes_total = np.mean(likes_posts)
 			comments_total = np.mean(comments_posts)
