@@ -534,7 +534,7 @@ with abas[1]:
 			username = data["user_profile"]["username"]
 			nome = data["user_profile"]["fullname"]
 
-			dispersion = round(perfis_e_dispersoes.get(username, "N/A"), 0)
+			dispersion = int(round(perfis_e_dispersoes.get(username, "N/A"), 0))
 			alcance = format_milhar(data["user_profile"].get("avg_reels_plays"))
 			classe_social = get_classes_sociais_formatadas(df_classes_formatado, username)
 			escolaridade = get_escolaridades_formatadas(df_educacao_formatado, username)
@@ -600,12 +600,11 @@ with abas[4]:
 			st.title("Posts recentes - {}".format(influenciador_selecionado))
 
 			# Divide os posts em blocos de 3 colunas
-			for post in recent_posts:
-			    with st.container():
-			        #st.image(post["img"], use_column_width=True)
-			        st.markdown(f"**{post['text']}**")
+			for i, post in enumerate(recent_posts):
+			    with cols[i % 3]:
+			        st.image(post.get("user_picture", ""), use_column_width=True)
+			        st.markdown(f"**{post.get('text', '')}**")
 			        
-		
 		except Exception as e:
 			st.warning(f"Erro ao buscar publicações para {influenciador_selecionado}: {e}")
 
