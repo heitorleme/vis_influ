@@ -615,11 +615,11 @@ with abas[4]:
 
 			col1, col2, col3 = st.columns(3)
 			with col1:
-				st.metric(label="👍 Média de Likes", value=int(likes_total))
+				st.metric(label="👍 Média de Likes", value=f"{int(likes_total):,}")
 			with col2:
-				st.metric(label="💬 Média de Comentários", value=int(comments_total))
+				st.metric(label="💬 Média de Comentários", value=f"{int(comments_total):,}")
 			with col3:
-				st.metric(label="🔁 Média de Shares", value=int(shares_total))
+				st.metric(label="🔁 Média de Shares", value=f"{int(shares_total):,}")
 	
 			# Divide os posts em linhas com 3 colunas cada
 			for row_start in range(0, len(commercial_posts), 3):
