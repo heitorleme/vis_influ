@@ -600,6 +600,26 @@ with abas[4]:
 			recent_posts = data["user_profile"].get("recent_posts", [])
 			
 			st.title("💰 Posts comerciais - {}".format(influenciador_selecionado))
+			likes_posts = []
+			comments_posts = []
+			shares_posts = []
+
+			for post in commercial_posts["stat"]:
+				likes_posts.append(post.get("likes", 0))
+				comments_posts.append(post.get("comments", 0))
+				shares_posts.append(post.get("shares", 0))
+
+			likes_total = np.mean(likes_posts)
+			comments_total = np.mean(comments_posts)
+			shares_total = np.mean(shares_posts)
+
+			col1, col2, col3 = st.columns(3)
+			with col1:
+				st.metric(label="👍 Média de Likes", value=int(likes_total))
+			with col2:
+				st.metric(label="💬 Média de Comentários", value=int(comments_total))
+			with col3:
+				st.metric(label="🔁 Média de Shares", value=int(shares_total))
 	
 			# Divide os posts em linhas com 3 colunas cada
 			for row_start in range(0, len(commercial_posts), 3):
