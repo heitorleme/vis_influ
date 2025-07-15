@@ -604,10 +604,10 @@ with abas[4]:
 			comments_posts = []
 			shares_posts = []
 
-			for post in commercial_posts["stat"]:
-				likes_posts.append(post.get("likes", 0))
-				comments_posts.append(post.get("comments", 0))
-				shares_posts.append(post.get("shares", 0))
+			for post in commercial_posts:
+				likes_posts.append(post["stat"].get("likes", 0))
+				comments_posts.append(post["stat"].get("comments", 0))
+				shares_posts.append(post["stat"].get("shares", 0))
 
 			likes_total = np.mean(likes_posts)
 			comments_total = np.mean(comments_posts)
