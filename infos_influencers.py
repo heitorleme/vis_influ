@@ -598,8 +598,9 @@ with abas[4]:
 			recent_posts = data.get("recent_posts", [])
 
 			st.title("Posts recentes - {}".format(influenciador_selecionado))
-
+	
 			# Divide os posts em blocos de 3 colunas
+			cols = st.columns(3)  # Cria 3 colunas lado a lado
 			for i, post in enumerate(recent_posts):
 			    with cols[i % 3]:
 			        st.image(post.get("user_picture", ""), use_column_width=True)
