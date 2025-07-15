@@ -603,9 +603,8 @@ with abas[4]:
 			for post in recent_posts:
 			    with st.container():
 			        #st.image(post["img"], use_column_width=True)
-			        st.markdown(f"**{post['caption']}**")
-			        st.button("Curtir ❤️", key=post["img"])
-
+			        st.markdown(f"**{post['text']}**")
+			        
 		
 		except Exception as e:
 			st.warning(f"Erro ao buscar publicações para {influenciador_selecionado}: {e}")
