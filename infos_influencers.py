@@ -604,11 +604,15 @@ with abas[4]:
 			cols = st.columns(3)  # Cria 3 colunas lado a lado
 			for i, post in enumerate(recent_posts):
 				with cols[i % 3]:
-					img_url = post.get("user_picture")
+					img_url = post.get("thumbnail")
 					if img_url:
-						st.image(img_url, use_column_width=True)
+						st.image(img_url, use_container_width=True)
 					else:
-						st.warning("Imagem não disponível para este post.")
+						img_url = posts.get("user_picture")
+						if img_url:
+							st.image(img_url, use_column_width=True)
+						else:
+							st.warning("Imagem não disponível para este post.")
 					st.markdown(f"**{post.get('text', '')}**")
 					
 		except Exception as e:
