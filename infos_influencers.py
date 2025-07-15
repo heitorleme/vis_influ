@@ -602,7 +602,7 @@ with abas[4]:
 			# Divide os posts em blocos de 3 colunas
 			for post in recent_posts:
 			    with st.container():
-			        st.image(post["img"], use_column_width=True)
+			        #st.image(post["img"], use_column_width=True)
 			        st.markdown(f"**{post['caption']}**")
 			        st.button("Curtir ❤️", key=post["img"])
 
