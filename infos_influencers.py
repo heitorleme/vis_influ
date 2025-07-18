@@ -339,8 +339,7 @@ with abas[3]:
 	df_cidades_exibicao["weight"] = df_cidades_exibicao["weight"].round(2).astype(str) + "%"
 
 	df_cidades_exibicao.rename(columns={"weight":"Porcentagem da audiência"}, inplace=True)
-	df_cidades_exibicao = df_cidades_exibicao.sort_values(by=["influencer", "Porcentagem da audiência"], ascending=[True, False]).groupby("influencer").head(top_n)
-
+	
     # Mostrar tabela original
 	st.subheader("Cidades por Influencer 🌎")
 
