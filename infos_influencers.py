@@ -254,9 +254,84 @@ with abas[2]:
 			if not stat_history:
 				st.info(f"Sem dados históricos para {influenciador_selecionado}")
 			else:
-                # Define número de colunas por linha
-				st.markdown("## Tags mais semelhantes ao conteúdo #️⃣")
+                # Layout com 3 colunas
+				col1, col2, col3 = st.columns(3)
 				
+				# Cartão 1 - Porcentagem de posts com likes ocultos
+				with col1:
+				    st.markdown(f"""
+				        <div style="
+				            height: 150px;
+				            display: flex;
+				            flex-direction: column;
+				            justify-content: center;
+				            align-items: center;
+				            padding: 1rem;
+				            border-radius: 0.5rem;
+				            background-color: #1a1c24;
+				            text-align: center;
+				            color: #ffffff;
+				        ">
+				            <h4 style="margin-bottom: 0.5rem;">Likes Ocultos</h4>
+				            <p style="margin: 0; font-size: 0.9rem;">{perfil['posts_with_hidden_like_percentage']:.1f}% dos posts</p>
+				        </div>
+				    """, unsafe_allow_html=True)
+				
+				# Cartão 2 - Sentimento médio dos comentários
+				with col2:
+				    st.markdown(f"""
+				        <div style="
+				            height: 150px;
+				            display: flex;
+				            flex-direction: column;
+				            justify-content: center;
+				            align-items: center;
+				            padding: 1rem;
+				            border-radius: 0.5rem;
+				            background-color: #1a1c24;
+				            text-align: center;
+				            color: #ffffff;
+				        ">
+				            <h4 style="margin-bottom: 0.5rem;">Sentimento Médio</h4>
+				            <p style="margin: 0; font-size: 0.9rem;">{perfil['comments_sentiment_analysis']['avg_sentiment']:.2f}</p>
+				        </div>
+				    """, unsafe_allow_html=True)
+				
+				# Cartão 3 - Brand Safety Score + riscos (se houver)
+				brand_score = perfil["brand_safety_analysis"]["brand_safety_score"]
+				risks = perfil["brand_safety_analysis"].get("risks", [])
+				
+				risks_html = ""
+				if risks:
+				    risks_html = "<ul style='margin: 0; padding-left: 1rem; font-size: 0.8rem;'>"
+				    for risk in risks:
+				        risks_html += f"<li>{risk}</li>"
+				    risks_html += "</ul>"
+				else:
+				    risks_html = "<p style='margin: 0; font-size: 0.8rem;'>Sem riscos identificados</p>"
+				
+				with col3:
+				    st.markdown(f"""
+				        <div style="
+				            height: 150px;
+				            display: flex;
+				            flex-direction: column;
+				            justify-content: center;
+				            align-items: center;
+				            padding: 1rem;
+				            border-radius: 0.5rem;
+				            background-color: #1a1c24;
+				            text-align: center;
+				            color: #ffffff;
+				        ">
+				            <h4 style="margin-bottom: 0.5rem;">Brand Safety</h4>
+				            <p style="margin: 0; font-size: 1.2rem; font-weight: bold;">{brand_score:.1f}</p>
+				            <div style="margin-top: 0.5rem;">{risks_html}</div>
+				        </div>
+				    """, unsafe_allow_html=True)
+				
+				# Define número de colunas por linha
+				st.markdown("## Tags mais semelhantes ao conteúdo #️⃣")
 				num_columns = 3
 
 				# Divide as tags em grupos de 3 para organizar em linhas
@@ -314,8 +389,6 @@ with abas[2]:
 				ax3.grid(True)
 				fig3.autofmt_xdate()
 				st.pyplot(fig3)
-
-				st.markdown("### Métricas das publicações identificadas na amostra:")
     
 		except Exception as e:
 			st.warning(f"Erro ao gerar gráficos para {influenciador_selecionado}: {e}")
