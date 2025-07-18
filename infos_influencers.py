@@ -13,7 +13,7 @@ import traceback
 def valor_para_cor(valor):
     # Espera valor entre 0 e 100
 	if valor < 33:
-    	return "#e63946"  # vermelho
+		return "#e63946"  # vermelho
 	elif valor < 66:
 		return "#f1c40f"  # amarelo
 	else:
