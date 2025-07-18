@@ -278,7 +278,7 @@ with abas[2]:
     # ============================
     # SEÇÃO: Histórico (6 meses) 📈
     # ============================
-    st.markdown("## Análise Individual, por Influenciador 🔍")
+	st.markdown("## Análise Individual, por Influenciador 🔍")
     # Dropdown para seleção do influenciador
 	influenciador_selecionado = st.selectbox("Selecione um influenciador:", list(influencers_ficheiros.keys()))
     
