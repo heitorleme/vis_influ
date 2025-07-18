@@ -52,6 +52,25 @@ def get_escolaridades_formatadas(df, nome_influencer):
     resultado = df.loc[df["influencer"] == nome_influencer, "educacao_formatada"].values
     return resultado[0] if len(resultado) > 0 else "N/A"
 
+# Função para determinar a cor com base no valor (de vermelho para verde)
+def get_color(value, min_val, max_val):
+	# Normaliza o valor para uma escala de 0 a 1
+	normalized_value = (value - min_val) / (max_val - min_val)
+        # Interpolação entre vermelho (0) e verde (1)
+        # Cores em RGB: Vermelho (255, 0, 0), Amarelo (255, 255, 0), Verde (0, 255, 0)
+        # Para uma transição suave, podemos ir de vermelho para amarelo e depois para verde.
+        if normalized_value < 0.5:
+        # De vermelho para amarelo
+        red = 255
+        green = int(255 * (normalized_value * 2))
+        blue = 0
+        else:
+        # De amarelo para verde
+        red = int(255 * (1 - (normalized_value - 0.5) * 2))
+        green = 255
+        blue = 0
+	return f"rgb({red}, {green}, {blue})"
+
 # Função para formatar os valores com separador de milhar
 formatador_milhar = FuncFormatter(lambda x, _: f'{int(x):,}'.replace(',', '.'))
 
@@ -256,80 +275,92 @@ with abas[2]:
 			else:
                 # Layout com 3 colunas
 				col1, col2, col3 = st.columns(3)
-				
+
 				# Cartão 1 - Porcentagem de posts com likes ocultos
-				with col1:
-				    st.markdown(f"""
-				        <div style="
-				            height: 150px;
-				            display: flex;
-				            flex-direction: column;
-				            justify-content: center;
-				            align-items: center;
-				            padding: 1rem;
-				            border-radius: 0.5rem;
-				            background-color: #1a1c24;
-				            text-align: center;
-				            color: #ffffff;
-				        ">
-				            <h4 style="margin-bottom: 0.5rem;">Likes Ocultos</h4>
-				            <p style="margin: 0; font-size: 0.9rem;">{perfil['posts_with_hidden_likes_percentage']:.1f}% dos posts</p>
-				        </div>
-				    """, unsafe_allow_html=True)
-				
-				# Cartão 2 - Sentimento médio dos comentários
-				with col2:
-				    st.markdown(f"""
-				        <div style="
-				            height: 150px;
-				            display: flex;
-				            flex-direction: column;
-				            justify-content: center;
-				            align-items: center;
-				            padding: 1rem;
-				            border-radius: 0.5rem;
-				            background-color: #1a1c24;
-				            text-align: center;
-				            color: #ffffff;
-				        ">
-				            <h4 style="margin-bottom: 0.5rem;">Sentimento Médio</h4>
-				            <p style="margin: 0; font-size: 0.9rem;">{perfil['comments_sentiment_analysis']['avg_sentiment']:.2f}</p>
-				        </div>
-				    """, unsafe_allow_html=True)
-				
-				# Cartão 3 - Brand Safety Score + riscos (se houver)
-				brand_score = perfil["brand_safety_analysis"]["brand_safety_score"]
-				risks = perfil["brand_safety_analysis"].get("risks", [])
-				
-				risks_html = ""
-				if risks:
-				    risks_html = "<ul style='margin: 0; padding-left: 1rem; font-size: 0.8rem;'>"
-				    for risk in risks:
-				        risks_html += f"<li>{risk}</li>"
-				    risks_html += "</ul>"
-				else:
-				    risks_html = "<p style='margin: 0; font-size: 0.8rem;'>Sem riscos identificados</p>"
-				
-				with col3:
-				    st.markdown(f"""
-				        <div style="
-				            height: 150px;
-				            display: flex;
-				            flex-direction: column;
-				            justify-content: center;
-				            align-items: center;
-				            padding: 1rem;
-				            border-radius: 0.5rem;
-				            background-color: #1a1c24;
-				            text-align: center;
-				            color: #ffffff;
-				        ">
-				            <h4 style="margin-bottom: 0.5rem;">Brand Safety</h4>
-				            <p style="margin: 0; font-size: 1.2rem; font-weight: bold;">{brand_score:.1f}</p>
-				            <div style="margin-top: 0.5rem;">{risks_html}</div>
-				        </div>
-				    """, unsafe_allow_html=True)
-				
+			# Para "Likes Ocultos", um valor menor é melhor (verde), um valor maior é pior (vermelho).
+			# Invertemos a lógica de cor.
+			likes_ocultos_val = perfil['posts_with_hidden_likes_percentage']
+			likes_ocultos_color = get_color(100 - likes_ocultos_val, 0, 100) # Inverte a escala para a cor
+
+			with col1:
+				st.markdown(f"""
+					<div style="
+						height: 150px;
+						display: flex;
+						flex-direction: column;
+						justify-content: center;
+						align-items: center;
+						padding: 1rem;
+						border-radius: 0.5rem;
+						background-color: #1a1c24;
+						text-align: center;
+						color: #ffffff;
+					">
+						<h4 style="margin-bottom: 0.5rem; text-align: center; width: 100%;">Likes Ocultos</h4>
+						<p style="margin: 0; font-size: 2.5rem; font-weight: bold; color: {likes_ocultos_color};">{int(likes_ocultos_val)}%</p>
+					</div>
+				""", unsafe_allow_html=True)
+
+			# Cartão 2 - Sentimento médio dos comentários
+			# Para "Sentimento Médio", um valor maior é melhor (verde), um valor menor é pior (vermelho).
+			sentimento_val = perfil['comments_sentiment_analysis']['avg_sentiment']
+			sentimento_color = get_color(sentimento_val, 0, 1) # Sentimento geralmente varia de -1 a 1, mas 0 a 1 é comum. Ajuste min/max conforme seus dados.
+
+			with col2:
+				st.markdown(f"""
+					<div style="
+						height: 150px;
+						display: flex;
+						flex-direction: column;
+						justify-content: center;
+						align-items: center;
+						padding: 1rem;
+						border-radius: 0.5rem;
+						background-color: #1a1c24;
+						text-align: center;
+						color: #ffffff;
+					">
+						<h4 style="margin-bottom: 0.5rem; text-align: center; width: 100%;">Sentimento Médio</h4>
+						<p style="margin: 0; font-size: 2.5rem; font-weight: bold; color: {sentimento_color};">{int(sentimento_val * 100)}%</p>
+					</div>
+				""", unsafe_allow_html=True) # Multiplicamos por 100 e convertemos para int para exibir como porcentagem
+
+			# Cartão 3 - Brand Safety Score + riscos (se houver)
+			# Para "Brand Safety", um valor maior é melhor (verde), um valor menor é pior (vermelho).
+			brand_score = perfil["brand_safety_analysis"]["brand_safety_score"]
+			brand_safety_color = get_color(brand_score, 0, 10) # Assumindo score de 0 a 10
+
+			risks = perfil["brand_safety_analysis"].get("risks", [])
+
+			risks_html = ""
+			if risks:
+				risks_html = "<ul style='margin: 0; padding-left: 1rem; font-size: 0.8rem; text-align: left; width: 100%;'>"
+				for risk in risks:
+					risks_html += f"<li>{risk}</li>"
+				risks_html += "</ul>"
+			else:
+				risks_html = "<p style='margin: 0; font-size: 0.8rem;'>Sem riscos identificados</p>"
+
+			with col3:
+				st.markdown(f"""
+					<div style="
+						height: 150px;
+						display: flex;
+						flex-direction: column;
+						justify-content: center;
+						align-items: center;
+						padding: 1rem;
+						border-radius: 0.5rem;
+						background-color: #1a1c24;
+						text-align: center;
+						color: #ffffff;
+					">
+						<h4 style="margin-bottom: 0.5rem; text-align: center; width: 100%;">Brand Safety</h4>
+						<p style="margin: 0; font-size: 2.5rem; font-weight: bold; color: {brand_safety_color};">{int(brand_score)}</p>
+						<div style="margin-top: 0.5rem; width: 100%; text-align: center;">{risks_html}</div>
+					</div>
+				""", unsafe_allow_html=True)
+	
 				# Define número de colunas por linha
 				st.markdown("## Tags mais semelhantes ao conteúdo #️⃣")
 				num_columns = 3
