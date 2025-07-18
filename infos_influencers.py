@@ -10,6 +10,15 @@ from matplotlib.ticker import FuncFormatter
 import requests
 import traceback
 
+def valor_para_cor(valor):
+    # Espera valor entre 0 e 100
+    if valor < 33:
+        return "#e63946"  # vermelho
+    elif valor < 66:
+        return "#f1c40f"  # amarelo
+    else:
+        return "#2ecc71"  # verde
+	    
 # Dicionário de tradução dos interesses
 interests_translation = {
 	"Activewear": "Roupas Esportivas",
@@ -255,83 +264,88 @@ with abas[2]:
 				st.info(f"Sem dados históricos para {influenciador_selecionado}")
 			else:
                 # Layout com 3 colunas
+				# Layout base
 				col1, col2, col3 = st.columns(3)
 				
-				# Cartão 1 - Porcentagem de posts com likes ocultos
+				card_style = """
+				    height: 180px;
+				    display: flex;
+				    flex-direction: column;
+				    justify-content: center;
+				    align-items: center;
+				    padding: 1rem;
+				    border-radius: 0.5rem;
+				    background-color: #1a1c24;
+				    text-align: center;
+				    color: #ffffff;
+				"""
+				
+				title_style = """
+				    margin: 0;
+				    min-height: 30px;
+				    font-size: 1rem;
+				"""
+				
+				number_style_template = """
+				    margin-top: 0.75rem;
+				    font-size: 1.8rem;
+				    font-weight: bold;
+				    color: {cor};
+				"""
+				
+				# Card 1 – Likes Ocultos
 				with col1:
 				    st.markdown(f"""
-				        <div style="
-				            height: 150px;
-				            display: flex;
-				            flex-direction: column;
-				            justify-content: center;
-				            align-items: center;
-				            padding: 1rem;
-				            border-radius: 0.5rem;
-				            background-color: #1a1c24;
-				            text-align: center;
-				            color: #ffffff;
-				        ">
-				            <h4 style="margin-bottom: 0.5rem;">Likes Ocultos</h4>
-				            <p style="margin: 0; font-size: 0.9rem;">{perfil['posts_with_hidden_likes_percentage']:.1f}% dos posts</p>
+				        <div style="{card_style}">
+				            <h4 style="{title_style}">Likes Ocultos</h4>
+				            <div style="margin-top: 0.75rem; font-size: 1.8rem; font-weight: bold;">
+				                {perfil['posts_with_hidden_like_percentage']:.1f}%
+				            </div>
 				        </div>
 				    """, unsafe_allow_html=True)
 				
-				# Cartão 2 - Sentimento médio dos comentários
+				# Card 2 – Sentimento Médio
+				sentimento = perfil['comments_sentiment_analysis']['avg_sentiment']
+				sentimento_pct = round(sentimento * 100)
+				sent_color = valor_para_cor(sentimento_pct)
+				
 				with col2:
 				    st.markdown(f"""
-				        <div style="
-				            height: 150px;
-				            display: flex;
-				            flex-direction: column;
-				            justify-content: center;
-				            align-items: center;
-				            padding: 1rem;
-				            border-radius: 0.5rem;
-				            background-color: #1a1c24;
-				            text-align: center;
-				            color: #ffffff;
-				        ">
-				            <h4 style="margin-bottom: 0.5rem;">Sentimento Médio</h4>
-				            <p style="margin: 0; font-size: 0.9rem;">{perfil['comments_sentiment_analysis']['avg_sentiment']:.2f}</p>
+				        <div style="{card_style}">
+				            <h4 style="{title_style}">Sentimento Médio</h4>
+				            <div style="{number_style_template.format(cor=sent_color)}">
+				                {sentimento_pct}
+				            </div>
 				        </div>
 				    """, unsafe_allow_html=True)
 				
-				# Cartão 3 - Brand Safety Score + riscos (se houver)
-				brand_score = perfil["brand_safety_analysis"]["brand_safety_score"]
-				risks = perfil["brand_safety_analysis"].get("risks", [])
+				# Card 3 – Brand Safety
+				brand_score = round(perfil["brand_safety_analysis"]["brand_safety_score"])
+				brand_color = valor_para_cor(brand_score)
 				
+				risks = perfil["brand_safety_analysis"].get("risks", [])
 				risks_html = ""
 				if risks:
-				    risks_html = "<ul style='margin: 0; padding-left: 1rem; font-size: 0.8rem;'>"
+				    risks_html = "<ul style='margin: 0.5rem 0 0 1rem; font-size: 0.8rem;'>"
 				    for risk in risks:
 				        risks_html += f"<li>{risk}</li>"
 				    risks_html += "</ul>"
 				else:
-				    risks_html = "<p style='margin: 0; font-size: 0.8rem;'>Sem riscos identificados</p>"
+				    risks_html = "<p style='margin-top: 0.5rem; font-size: 0.8rem;'>Sem riscos identificados</p>"
 				
 				with col3:
 				    st.markdown(f"""
-				        <div style="
-				            height: 150px;
-				            display: flex;
-				            flex-direction: column;
-				            justify-content: center;
-				            align-items: center;
-				            padding: 1rem;
-				            border-radius: 0.5rem;
-				            background-color: #1a1c24;
-				            text-align: center;
-				            color: #ffffff;
-				        ">
-				            <h4 style="margin-bottom: 0.5rem;">Brand Safety</h4>
-				            <p style="margin: 0; font-size: 1.2rem; font-weight: bold;">{brand_score:.1f}</p>
-				            <div style="margin-top: 0.5rem;">{risks_html}</div>
+				        <div style="{card_style}">
+				            <h4 style="{title_style}">Brand Safety</h4>
+				            <div style="{number_style_template.format(cor=brand_color)}">
+				                {brand_score}
+				            </div>
+				            {risks_html}
 				        </div>
 				    """, unsafe_allow_html=True)
 				
 				# Define número de colunas por linha
-				st.markdown("## Tags mais semelhantes ao conteúdo #️⃣")
+    				st.markdown("## Tags mais semelhantes ao conteúdo #️⃣")
 				num_columns = 3
 
 				# Divide as tags em grupos de 3 para organizar em linhas
@@ -357,7 +371,7 @@ with abas[2]:
 						        <p style="margin: 0; font-size: 0.9rem;">Distância: {tag_info['distance']:.2f}</p>
 						    </div>
 						""", unsafe_allow_html=True)
-				
+      
 				# Converte o histórico em DataFrame
 				df_hist = pd.DataFrame(stat_history)
 				df_hist['month'] = pd.to_datetime(df_hist['month'])
@@ -392,9 +406,8 @@ with abas[2]:
     
 		except Exception as e:
 			st.warning(f"Erro ao gerar gráficos para {influenciador_selecionado}: {e}")
-	
-
-######################### Informações da audiência #################################
+   
+   ######################### Informações da audiência #################################
 with abas[3]:
 	df_cidades_exibicao = df_cidades.copy()
 	df_cidades_exibicao.drop(columns=["coords.lat", "coords.lon", "country.id", "country.code", "state.id", "state.name", "id"], inplace=True, errors="ignore")
