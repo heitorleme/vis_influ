@@ -254,7 +254,28 @@ with abas[2]:
 			if not stat_history:
 				st.info(f"Sem dados históricos para {influenciador_selecionado}")
 			else:
-                # Converte o histórico em DataFrame
+                # Define número de colunas por linha
+				num_columns = 3
+
+				# Divide as tags em grupos de 3 para organizar em linhas
+				for i in range(0, len(user_profile["relevant_tags"]), num_columns):
+				    cols = st.columns(num_columns)
+				    for j, tag_info in enumerate(user_profile["relevant_tags"][i:i+num_columns]):
+				        with cols[j]:
+				            st.markdown(f"""
+				                <div style="
+				                    padding: 1rem; 
+				                    border-radius: 0.5rem; 
+				                    background-color: #1a1c24; 
+				                    text-align: center;
+				                    color: #ffffff;
+				                ">
+				                    <h4 style="margin-bottom: 0.5rem;">{tag_info['tag']}</h4>
+				                    <p style="margin: 0; font-size: 0.9rem;">Distância: {tag_info['distance']:.2f}</p>
+				                </div>
+				            """, unsafe_allow_html=True)
+				
+				# Converte o histórico em DataFrame
 				df_hist = pd.DataFrame(stat_history)
 				df_hist['month'] = pd.to_datetime(df_hist['month'])
 				df_hist = df_hist.sort_values('month')
@@ -287,20 +308,6 @@ with abas[2]:
 				st.pyplot(fig3)
 
 				st.markdown("### Métricas das publicações identificadas na amostra:")
-				# Define número de colunas por linha
-				num_columns = 3
-
-				# Divide as tags em grupos de 3 para organizar em linhas
-				for i in range(0, len(perfil["relevant_tags"]), num_columns):
-				    cols = st.columns(num_columns)
-				    for j, tag_info in enumerate(perfil["relevant_tags"][i:i+num_columns]):
-				        with cols[j]:
-				            st.markdown(f"""
-				                <div style="padding: 1rem; border-radius: 0.5rem; background-color: #f0f2f6; text-align: center;">
-				                    <h4 style="margin-bottom: 0.5rem;">{tag_info['tag']}</h4>
-				                    <p style="margin: 0; font-size: 0.9rem; color: #666;">Distância: {tag_info['distance']:.2f}</p>
-				                </div>
-				            """, unsafe_allow_html=True)
     
 		except Exception as e:
 			st.warning(f"Erro ao gerar gráficos para {influenciador_selecionado}: {e}")
