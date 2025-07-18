@@ -258,9 +258,9 @@ with abas[2]:
 				num_columns = 3
 
 				# Divide as tags em grupos de 3 para organizar em linhas
-				for i in range(0, len(user_profile["relevant_tags"]), num_columns):
+				for i in range(0, len(perfil["relevant_tags"]), num_columns):
 				    cols = st.columns(num_columns)
-				    for j, tag_info in enumerate(user_profile["relevant_tags"][i:i+num_columns]):
+				    for j, tag_info in enumerate(perfil["relevant_tags"][i:i+num_columns]):
 				        with cols[j]:
 				            st.markdown(f"""
 				                <div style="
