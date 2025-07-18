@@ -302,8 +302,9 @@ with abas[3]:
 	df_cidades_exibicao.drop(columns=["coords.lat", "coords.lon", "country.id", "country.code", "state.id", "state.name", "id"], inplace=True, errors="ignore")
         
     # Converter 'weight' em porcentagem formatada com símbolo %
-	df_cidades_exibicao["weight"] = df_cidades_exibicao["weight"] * 100
-	df_cidades_exibicao["weight"] = df_cidades_exibicao["weight"].round(2).astype(str) + "%"
+	st.write("Colunas disponíveis:", df_cidades_exibicao.columns.tolist())
+	#df_cidades_exibicao["weight"] = df_cidades_exibicao["weight"] * 100
+	#df_cidades_exibicao["weight"] = df_cidades_exibicao["weight"].round(2).astype(str) + "%"
 
 	df_cidades_exibicao.rename(columns={"weight":"Porcentagem da audiência"}, inplace=True)
 	
