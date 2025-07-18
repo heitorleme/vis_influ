@@ -10,15 +10,6 @@ from matplotlib.ticker import FuncFormatter
 import requests
 import traceback
 
-def valor_para_cor(valor):
-    # Espera valor entre 0 e 100
-	if valor < 33:
-		return "#e63946"  # vermelho
-	elif valor < 66:
-		return "#f1c40f"  # amarelo
-	else:
-		return "#2ecc71"  # verde
-	    
 # Dicionário de tradução dos interesses
 interests_translation = {
 	"Activewear": "Roupas Esportivas",
@@ -99,6 +90,22 @@ with abas[0]:
 				st.warning(f"O arquivo '{filename}' não segue o padrão esperado.")
 	else:
 		st.info("Por favor, carregue arquivos JSON para começar.")
+
+	# Processar dados de cidades
+	df_cidades = pd.DataFrame()
+
+	for influencer, file in influencers_ficheiros.items():
+		try:
+			df_json = pd.read_json(file)
+			cities_entries = df_json["audience_followers"]["data"]["audience_geo"]["cities"]
+			df_temp = pd.json_normalize(cities_entries)
+			df_temp["influencer"] = influencer
+			df_cidades = pd.concat([df_cidades, df_temp], ignore_index=True)
+		except Exception as e:
+			st.warning(f"Sem registro de cidades para o influencer '{influencer}' ou erro ao processar: {e}")
+
+	if not df_cidades.empty:
+		df_cidades.rename(columns={"name": "Cidade"}, inplace=True)
 
 	# Dentro da aba onde influencers_ficheiros é definido
 	st.session_state["influencers_ficheiros"] = influencers_ficheiros
@@ -248,63 +255,153 @@ with abas[2]:
 				st.info(f"Sem dados históricos para {influenciador_selecionado}")
 			else:
                 # Layout com 3 colunas
-				# Layout base
 				col1, col2, col3 = st.columns(3)
 				
-				card_style = """
-					height: 180px;
-					display: flex;
-					flex-direction: column;
-					justify-content: center;
-					align-items: center;
-					padding: 1rem;
-					border-radius: 0.5rem;
-					background-color: #1a1c24;
-					text-align: center;
-					color: #ffffff;
-				"""
+				# Cartão 1 - Porcentagem de posts com likes ocultos
+				with col1:
+				    st.markdown(f"""
+				        <div style="
+				            height: 150px;
+				            display: flex;
+				            flex-direction: column;
+				            justify-content: center;
+				            align-items: center;
+				            padding: 1rem;
+				            border-radius: 0.5rem;
+				            background-color: #1a1c24;
+				            text-align: center;
+				            color: #ffffff;
+				        ">
+				            <h4 style="margin-bottom: 0.5rem;">Likes Ocultos</h4>
+				            <p style="margin: 0; font-size: 0.9rem;">{perfil['posts_with_hidden_like_percentage']:.1f}% dos posts</p>
+				        </div>
+				    """, unsafe_allow_html=True)
 				
-				title_style = """
-					margin: 0;
-					min-height: 30px;
-					font-size: 1rem;
-				"""
+				# Cartão 2 - Sentimento médio dos comentários
+				with col2:
+				    st.markdown(f"""
+				        <div style="
+				            height: 150px;
+				            display: flex;
+				            flex-direction: column;
+				            justify-content: center;
+				            align-items: center;
+				            padding: 1rem;
+				            border-radius: 0.5rem;
+				            background-color: #1a1c24;
+				            text-align: center;
+				            color: #ffffff;
+				        ">
+				            <h4 style="margin-bottom: 0.5rem;">Sentimento Médio</h4>
+				            <p style="margin: 0; font-size: 0.9rem;">{perfil['comments_sentiment_analysis']['avg_sentiment']:.2f}</p>
+				        </div>
+				    """, unsafe_allow_html=True)
 				
-				number_style_template = """
-					margin-top: 0.75rem;
-					font-size: 1.8rem;
-					font-weight: bold;
-					color: {cor};
-				"""
-		
+				# Cartão 3 - Brand Safety Score + riscos (se houver)
+				brand_score = perfil["brand_safety_analysis"]["brand_safety_score"]
+				risks = perfil["brand_safety_analysis"].get("risks", [])
+				
+				risks_html = ""
+				if risks:
+				    risks_html = "<ul style='margin: 0; padding-left: 1rem; font-size: 0.8rem;'>"
+				    for risk in risks:
+				        risks_html += f"<li>{risk}</li>"
+				    risks_html += "</ul>"
+				else:
+				    risks_html = "<p style='margin: 0; font-size: 0.8rem;'>Sem riscos identificados</p>"
+				
+				with col3:
+				    st.markdown(f"""
+				        <div style="
+				            height: 150px;
+				            display: flex;
+				            flex-direction: column;
+				            justify-content: center;
+				            align-items: center;
+				            padding: 1rem;
+				            border-radius: 0.5rem;
+				            background-color: #1a1c24;
+				            text-align: center;
+				            color: #ffffff;
+				        ">
+				            <h4 style="margin-bottom: 0.5rem;">Brand Safety</h4>
+				            <p style="margin: 0; font-size: 1.2rem; font-weight: bold;">{brand_score:.1f}</p>
+				            <div style="margin-top: 0.5rem;">{risks_html}</div>
+				        </div>
+				    """, unsafe_allow_html=True)
+				
+				# Define número de colunas por linha
+				st.markdown("## Tags mais semelhantes ao conteúdo #️⃣")
+				num_columns = 3
+
+				# Divide as tags em grupos de 3 para organizar em linhas
+				max_tags = 12
+				for i in range(0, min(len(perfil["relevant_tags"]), max_tags), num_columns):
+				    cols = st.columns(num_columns)
+				    for j, tag_info in enumerate(perfil["relevant_tags"][i:i+num_columns]):
+				        with cols[j]:
+				            st.markdown(f"""
+						    <div style="
+						        height: 150px;
+						        display: flex;
+						        flex-direction: column;
+						        justify-content: center;
+						        align-items: center;
+						        padding: 1rem; 
+						        border-radius: 0.5rem; 
+						        background-color: #1a1c24; 
+						        text-align: center;
+						        color: #ffffff;
+						    ">
+						        <h4 style="margin-bottom: 0.5rem;">{tag_info['tag']}</h4>
+						        <p style="margin: 0; font-size: 0.9rem;">Distância: {tag_info['distance']:.2f}</p>
+						    </div>
+						""", unsafe_allow_html=True)
+				
+				# Converte o histórico em DataFrame
+				df_hist = pd.DataFrame(stat_history)
+				df_hist['month'] = pd.to_datetime(df_hist['month'])
+				df_hist = df_hist.sort_values('month')
+
+				st.subheader(f"Evolução histórica - {influenciador_selecionado}")
+    
+				# Função para formatar valores com separador de milhar
+				formatador_milhar = FuncFormatter(lambda x, _: f'{int(x):,}'.replace(',', '.'))
+    
+                # Gráfico: Followers
+				fig1, ax1 = plt.subplots(figsize=(8, 4))
+				ax1.plot(df_hist['month'], df_hist['followers'], marker='o')
+				ax1.set_title('Followers')
+				ax1.set_xlabel('Mês')
+				ax1.set_ylabel('Followers')
+				ax1.yaxis.set_major_formatter(formatador_milhar)
+				ax1.grid(True)
+				fig1.autofmt_xdate()
+				st.pyplot(fig1)
+
+				# Gráfico: Engajamento Médio
+				fig3, ax3 = plt.subplots(figsize=(8, 4))
+				ax3.plot(df_hist['month'], df_hist['avg_engagements'], color='orange', marker='o')
+				ax3.set_title('Engajamento Médio')
+				ax3.set_xlabel('Mês')
+				ax3.set_ylabel('Engajamentos')
+				ax3.yaxis.set_major_formatter(formatador_milhar)
+				ax3.grid(True)
+				fig3.autofmt_xdate()
+				st.pyplot(fig3)
+    
 		except Exception as e:
 			st.warning(f"Erro ao gerar gráficos para {influenciador_selecionado}: {e}")
-   
-   ######################### Informações da audiência #################################
-with abas[3]:
-	# Processar dados de cidades
-	df_cidades = pd.DataFrame()
-
-	for influencer, file in influencers_ficheiros.items():
-		try:
-			df_json = pd.read_json(file)
-			cities_entries = df_json["audience_followers"]["data"]["audience_geo"]["cities"]
-			df_temp = pd.json_normalize(cities_entries)
-			df_temp["influencer"] = influencer
-			df_cidades = pd.concat([df_cidades, df_temp], ignore_index=True)
-		except Exception as e:
-			st.warning(f"Sem registro de cidades para o influencer '{influencer}' ou erro ao processar: {e}")
-
-	if not df_cidades.empty:
-		df_cidades.rename(columns={"name": "Cidade"}, inplace=True)
 	
+
+######################### Informações da audiência #################################
+with abas[3]:
 	df_cidades_exibicao = df_cidades.copy()
-	#df_cidades_exibicao.drop(columns=["coords.lat", "coords.lon", "country.id", "country.code", "state.id", "state.name", "id"], inplace=True, errors="ignore")
+	df_cidades_exibicao.drop(columns=["coords.lat", "coords.lon", "country.id", "country.code", "state.id", "state.name", "id"], inplace=True, errors="ignore")
         
     # Converter 'weight' em porcentagem formatada com símbolo %
-	st.write("Colunas disponíveis:", df_cidades_exibicao.columns.tolist())
-	#df_cidades_exibicao["weight"] = df_cidades_exibicao["weight"] * 100
-	#df_cidades_exibicao["weight"] = df_cidades_exibicao["weight"].round(2).astype(str) + "%"
+	df_cidades_exibicao["weight"] = df_cidades_exibicao["weight"] * 100
+	df_cidades_exibicao["weight"] = df_cidades_exibicao["weight"].round(2).astype(str) + "%"
 
 	df_cidades_exibicao.rename(columns={"weight":"Porcentagem da audiência"}, inplace=True)
 	
@@ -731,4 +828,3 @@ with abas[1]:
 	    file_name=file_name,
 	    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 	)
-
