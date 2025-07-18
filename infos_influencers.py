@@ -345,7 +345,7 @@ with abas[2]:
 					""", unsafe_allow_html=True)
 				
 				# Define número de colunas por linha
-    				st.markdown("## Tags mais semelhantes ao conteúdo #️⃣")
+	   			st.markdown("## Tags mais semelhantes ao conteúdo #️⃣")
 				num_columns = 3
 
 				# Divide as tags em grupos de 3 para organizar em linhas
