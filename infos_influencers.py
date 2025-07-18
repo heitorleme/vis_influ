@@ -273,7 +273,7 @@ with abas[2]:
 				            color: #ffffff;
 				        ">
 				            <h4 style="margin-bottom: 0.5rem;">Likes Ocultos</h4>
-				            <p style="margin: 0; font-size: 0.9rem;">{perfil['posts_with_hidden_like_percentage']:.1f}% dos posts</p>
+				            <p style="margin: 0; font-size: 0.9rem;">{perfil['posts_with_hidden_likes_percentage']:.1f}% dos posts</p>
 				        </div>
 				    """, unsafe_allow_html=True)
 				
