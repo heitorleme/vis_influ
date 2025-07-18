@@ -12,12 +12,12 @@ import traceback
 
 def valor_para_cor(valor):
     # Espera valor entre 0 e 100
-    if valor < 33:
-        return "#e63946"  # vermelho
-    elif valor < 66:
-        return "#f1c40f"  # amarelo
-    else:
-        return "#2ecc71"  # verde
+	if valor < 33:
+    	return "#e63946"  # vermelho
+	elif valor < 66:
+		return "#f1c40f"  # amarelo
+	else:
+		return "#2ecc71"  # verde
 	    
 # Dicionário de tradução dos interesses
 interests_translation = {
@@ -268,41 +268,41 @@ with abas[2]:
 				col1, col2, col3 = st.columns(3)
 				
 				card_style = """
-				    height: 180px;
-				    display: flex;
-				    flex-direction: column;
-				    justify-content: center;
-				    align-items: center;
-				    padding: 1rem;
-				    border-radius: 0.5rem;
-				    background-color: #1a1c24;
-				    text-align: center;
-				    color: #ffffff;
+					height: 180px;
+					display: flex;
+					flex-direction: column;
+					justify-content: center;
+					align-items: center;
+					padding: 1rem;
+					border-radius: 0.5rem;
+					background-color: #1a1c24;
+					text-align: center;
+					color: #ffffff;
 				"""
 				
 				title_style = """
-				    margin: 0;
-				    min-height: 30px;
-				    font-size: 1rem;
+					margin: 0;
+					min-height: 30px;
+					font-size: 1rem;
 				"""
 				
 				number_style_template = """
-				    margin-top: 0.75rem;
-				    font-size: 1.8rem;
-				    font-weight: bold;
-				    color: {cor};
+					margin-top: 0.75rem;
+					font-size: 1.8rem;
+					font-weight: bold;
+					color: {cor};
 				"""
 				
 				# Card 1 – Likes Ocultos
 				with col1:
-				    st.markdown(f"""
-				        <div style="{card_style}">
-				            <h4 style="{title_style}">Likes Ocultos</h4>
-				            <div style="margin-top: 0.75rem; font-size: 1.8rem; font-weight: bold;">
-				                {perfil['posts_with_hidden_like_percentage']:.1f}%
-				            </div>
-				        </div>
-				    """, unsafe_allow_html=True)
+					st.markdown(f"""
+						<div style="{card_style}">
+							<h4 style="{title_style}">Likes Ocultos</h4>
+							<div style="margin-top: 0.75rem; font-size: 1.8rem; font-weight: bold;">
+								{perfil['posts_with_hidden_like_percentage']:.1f}%
+							</div>
+						</div>
+					""", unsafe_allow_html=True)
 				
 				# Card 2 – Sentimento Médio
 				sentimento = perfil['comments_sentiment_analysis']['avg_sentiment']
@@ -310,14 +310,14 @@ with abas[2]:
 				sent_color = valor_para_cor(sentimento_pct)
 				
 				with col2:
-				    st.markdown(f"""
-				        <div style="{card_style}">
-				            <h4 style="{title_style}">Sentimento Médio</h4>
-				            <div style="{number_style_template.format(cor=sent_color)}">
-				                {sentimento_pct}
-				            </div>
-				        </div>
-				    """, unsafe_allow_html=True)
+					st.markdown(f"""
+						<div style="{card_style}">
+							<h4 style="{title_style}">Sentimento Médio</h4>
+							<div style="{number_style_template.format(cor=sent_color)}">
+								{sentimento_pct}
+							</div>
+						</div>
+					""", unsafe_allow_html=True)
 				
 				# Card 3 – Brand Safety
 				brand_score = round(perfil["brand_safety_analysis"]["brand_safety_score"])
@@ -326,23 +326,23 @@ with abas[2]:
 				risks = perfil["brand_safety_analysis"].get("risks", [])
 				risks_html = ""
 				if risks:
-				    risks_html = "<ul style='margin: 0.5rem 0 0 1rem; font-size: 0.8rem;'>"
-				    for risk in risks:
-				        risks_html += f"<li>{risk}</li>"
-				    risks_html += "</ul>"
+					risks_html = "<ul style='margin: 0.5rem 0 0 1rem; font-size: 0.8rem;'>"
+					for risk in risks:
+						risks_html += f"<li>{risk}</li>"
+					risks_html += "</ul>"
 				else:
-				    risks_html = "<p style='margin-top: 0.5rem; font-size: 0.8rem;'>Sem riscos identificados</p>"
+					risks_html = "<p style='margin-top: 0.5rem; font-size: 0.8rem;'>Sem riscos identificados</p>"
 				
 				with col3:
-				    st.markdown(f"""
-				        <div style="{card_style}">
-				            <h4 style="{title_style}">Brand Safety</h4>
-				            <div style="{number_style_template.format(cor=brand_color)}">
-				                {brand_score}
-				            </div>
-				            {risks_html}
-				        </div>
-				    """, unsafe_allow_html=True)
+					st.markdown(f"""
+						<div style="{card_style}">
+							<h4 style="{title_style}">Brand Safety</h4>
+							<div style="{number_style_template.format(cor=brand_color)}">
+								{brand_score}
+							</div>
+							{risks_html}
+						</div>
+					""", unsafe_allow_html=True)
 				
 				# Define número de colunas por linha
     				st.markdown("## Tags mais semelhantes ao conteúdo #️⃣")
