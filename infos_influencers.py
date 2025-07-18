@@ -100,22 +100,6 @@ with abas[0]:
 	else:
 		st.info("Por favor, carregue arquivos JSON para começar.")
 
-	# Processar dados de cidades
-	df_cidades = pd.DataFrame()
-
-	for influencer, file in influencers_ficheiros.items():
-		try:
-			df_json = pd.read_json(file)
-			cities_entries = df_json["audience_followers"]["data"]["audience_geo"]["cities"]
-			df_temp = pd.json_normalize(cities_entries)
-			df_temp["influencer"] = influencer
-			df_cidades = pd.concat([df_cidades, df_temp], ignore_index=True)
-		except Exception as e:
-			st.warning(f"Sem registro de cidades para o influencer '{influencer}' ou erro ao processar: {e}")
-
-	if not df_cidades.empty:
-		df_cidades.rename(columns={"name": "Cidade"}, inplace=True)
-
 	# Dentro da aba onde influencers_ficheiros é definido
 	st.session_state["influencers_ficheiros"] = influencers_ficheiros
 
@@ -298,6 +282,22 @@ with abas[2]:
    
    ######################### Informações da audiência #################################
 with abas[3]:
+	# Processar dados de cidades
+	df_cidades = pd.DataFrame()
+
+	for influencer, file in influencers_ficheiros.items():
+		try:
+			df_json = pd.read_json(file)
+			cities_entries = df_json["audience_followers"]["data"]["audience_geo"]["cities"]
+			df_temp = pd.json_normalize(cities_entries)
+			df_temp["influencer"] = influencer
+			df_cidades = pd.concat([df_cidades, df_temp], ignore_index=True)
+		except Exception as e:
+			st.warning(f"Sem registro de cidades para o influencer '{influencer}' ou erro ao processar: {e}")
+
+	if not df_cidades.empty:
+		df_cidades.rename(columns={"name": "Cidade"}, inplace=True)
+	
 	df_cidades_exibicao = df_cidades.copy()
 	df_cidades_exibicao.drop(columns=["coords.lat", "coords.lon", "country.id", "country.code", "state.id", "state.name", "id"], inplace=True, errors="ignore")
         
