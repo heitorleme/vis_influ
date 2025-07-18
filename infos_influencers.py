@@ -432,48 +432,48 @@ with abas[3]:
 	)
 
 	# BLOCO: Análise de Classes Sociais por Influencer
-		st.subheader("Análise de Classes Sociais por Influencer 🧮")
+	st.subheader("Análise de Classes Sociais por Influencer 🧮")
 
-		# Importar arquivo de classes sociais
-		try:
-			url_excel = "https://github.com/heitorleme/vis_influ/raw/refs/heads/main/classes_sociais_por_cidade.xlsx"
-			classes_por_cidade = pd.read_excel(url_excel, header=0)
+	# Importar arquivo de classes sociais
+	try:
+		url_excel = "https://github.com/heitorleme/vis_influ/raw/refs/heads/main/classes_sociais_por_cidade.xlsx"
+		classes_por_cidade = pd.read_excel(url_excel, header=0)
 
-			# Normalizar peso por influencer
-			df_cidades["normalized_weight"] = df_cidades.groupby("influencer")["weight"].transform(lambda x: x / x.sum())
+		# Normalizar peso por influencer
+		df_cidades["normalized_weight"] = df_cidades.groupby("influencer")["weight"].transform(lambda x: x / x.sum())
 
-            # Merge
-			df_merged = pd.merge(df_cidades, classes_por_cidade, on=["Cidade"], how="inner")
+        # Merge
+		df_merged = pd.merge(df_cidades, classes_por_cidade, on=["Cidade"], how="inner")
 
-            # Cálculo ponderado das classes
-			df_merged["normalized_classe_de"] = df_merged["normalized_weight"] * df_merged["Classes D e E"]
-			df_merged["normalized_classe_c"] = df_merged["normalized_weight"] * df_merged["Classe C"]
-			df_merged["normalized_classe_b"] = df_merged["normalized_weight"] * df_merged["Classe B"]
-			df_merged["normalized_classe_a"] = df_merged["normalized_weight"] * df_merged["Classe A"]
+        # Cálculo ponderado das classes
+		df_merged["normalized_classe_de"] = df_merged["normalized_weight"] * df_merged["Classes D e E"]
+		df_merged["normalized_classe_c"] = df_merged["normalized_weight"] * df_merged["Classe C"]
+		df_merged["normalized_classe_b"] = df_merged["normalized_weight"] * df_merged["Classe B"]
+		df_merged["normalized_classe_a"] = df_merged["normalized_weight"] * df_merged["Classe A"]
 
-            # Média ponderada por influencer
-			result = df_merged.groupby("influencer")[["normalized_classe_de", "normalized_classe_c", "normalized_classe_b", "normalized_classe_a"]].sum() * 100
-			result = result.round(2)
+        # Média ponderada por influencer
+		result = df_merged.groupby("influencer")[["normalized_classe_de", "normalized_classe_c", "normalized_classe_b", "normalized_classe_a"]].sum() * 100
+		result = result.round(2)
 
-            # Formatar resultado como string com quebras de linha e %
-			df_classes_formatado = pd.DataFrame([
-				{
-					"influencer": idx,
-					"classes_sociais_formatadas": "  \n".join([
-						f"Classes D e E: {row['normalized_classe_de']:.2f}%",
-						f"Classe C: {row['normalized_classe_c']:.2f}%",
-						f"Classe B: {row['normalized_classe_b']:.2f}%",
-						f"Classe A: {row['normalized_classe_a']:.2f}%"
-					])
-				}
-				for idx, row in result.iterrows()
-			])
+        # Formatar resultado como string com quebras de linha e %
+		df_classes_formatado = pd.DataFrame([
+			{
+				"influencer": idx,
+				"classes_sociais_formatadas": "  \n".join([
+					f"Classes D e E: {row['normalized_classe_de']:.2f}%",
+					f"Classe C: {row['normalized_classe_c']:.2f}%",
+					f"Classe B: {row['normalized_classe_b']:.2f}%",
+					f"Classe A: {row['normalized_classe_a']:.2f}%"
+				])
+			}
+			for idx, row in result.iterrows()
+		])
 		
-		    # Exibir tabela formatada
-			st.table(df_classes_formatado)
+		# Exibir tabela formatada
+		st.table(df_classes_formatado)
 
-		except Exception as e:
-			st.error(f"Erro ao carregar ou processar a planilha de classes sociais: {e}")
+	except Exception as e:
+		st.error(f"Erro ao carregar ou processar a planilha de classes sociais: {e}")
 
     # ============================
     # SEÇÃO: Análise de Educação 📚
