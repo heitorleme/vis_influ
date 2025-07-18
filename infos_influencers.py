@@ -255,6 +255,8 @@ with abas[2]:
 				st.info(f"Sem dados históricos para {influenciador_selecionado}")
 			else:
                 # Define número de colunas por linha
+				st.markdown("## Tags mais semelhantes ao conteúdo #️⃣")
+				
 				num_columns = 3
 
 				# Divide as tags em grupos de 3 para organizar em linhas
@@ -263,17 +265,22 @@ with abas[2]:
 				    for j, tag_info in enumerate(perfil["relevant_tags"][i:i+num_columns]):
 				        with cols[j]:
 				            st.markdown(f"""
-				                <div style="
-				                    padding: 1rem; 
-				                    border-radius: 0.5rem; 
-				                    background-color: #1a1c24; 
-				                    text-align: center;
-				                    color: #ffffff;
-				                ">
-				                    <h4 style="margin-bottom: 0.5rem;">{tag_info['tag']}</h4>
-				                    <p style="margin: 0; font-size: 0.9rem;">Distância: {tag_info['distance']:.2f}</p>
-				                </div>
-				            """, unsafe_allow_html=True)
+						    <div style="
+						        height: 150px;
+						        display: flex;
+						        flex-direction: column;
+						        justify-content: center;
+						        align-items: center;
+						        padding: 1rem; 
+						        border-radius: 0.5rem; 
+						        background-color: #1a1c24; 
+						        text-align: center;
+						        color: #ffffff;
+						    ">
+						        <h4 style="margin-bottom: 0.5rem;">{tag_info['tag']}</h4>
+						        <p style="margin: 0; font-size: 0.9rem;">Distância: {tag_info['distance']:.2f}</p>
+						    </div>
+						""", unsafe_allow_html=True)
 				
 				# Converte o histórico em DataFrame
 				df_hist = pd.DataFrame(stat_history)
