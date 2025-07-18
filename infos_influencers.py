@@ -330,71 +330,6 @@ with abas[2]:
 	# Exibir no Streamlit
 	st.table(df_top_interesses_formatado)
 
-with abas[1]:
-	influencers_ficheiros = st.session_state.get("influencers_ficheiros", {})
-	lista_consolidada = []
-
-	for i in influencers_ficheiros.keys():
-		try:
-			file = influencers_ficheiros.get(i)
-			file.seek(0)
-			file_bytes = file.read()
-	
-			# Carrega o conteúdo JSON como dicionário
-			data = json.load(io.BytesIO(file_bytes))
-			
-			username = data["user_profile"]["username"]
-			nome = data["user_profile"]["fullname"]
-
-			dispersion = int(round(perfis_e_dispersoes.get(username, "N/A"), 0))
-			alcance = format_milhar(data["user_profile"].get("avg_reels_plays"))
-			classe_social = get_classes_sociais_formatadas(df_classes_formatado, username)
-			escolaridade = get_escolaridades_formatadas(df_educacao_formatado, username)
-	
-			interesses = df_top_interesses_formatado.loc[
-				df_top_interesses_formatado["influencer"] == username,
-				"interesses_formatados"
-			].values
-			interesses = interesses[0] if len(interesses) > 0 else "N/A"
-	
-			lista_consolidada.append({
-				"Influencer (Username)": username,
-				"Influencer (Nome)": nome,
-				"Dispersão de interações": dispersion,
-				"Alcance médio esperado por post": alcance,
-				"Interesses da audiência": interesses,
-				"Classe social": classe_social,
-				"Escolaridade": escolaridade
-			})
-
-		except Exception as e:
-			st.error(f"❌ Erro ao processar dados de {i}: {e}")
-			st.text(traceback.format_exc())
-	
-	# Criar DataFrame final
-	df_resultado = pd.DataFrame(lista_consolidada)
-
-	# Nome do arquivo
-	file_name = "resumo_defesa_influenciadores.xlsx"
-	
-	# Converter o DataFrame para um objeto Excel em memória
-	output = io.BytesIO()
-	with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
-	    df_resultado.to_excel(writer, index=False, sheet_name='Defesa Influenciadores')
-	    output.seek(0)
-	
-	# Exibir em Streamlit
-	st.title("Consolidação de Influenciadores")
-	st.table(df_resultado)
-
-	# Botão de download
-	st.download_button(
-	    label="📥 Baixar tabela de resumo como Excel",
-	    data=output,
-	    file_name=file_name,
-	    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-	)
-
 ######################### Informações da audiência #################################
 with abas[3]:
 # Seleção do número de registros por influencer
@@ -722,4 +657,69 @@ with abas[4]:
 					
 		except Exception as e:
 			st.warning(f"Erro ao buscar publicações para {influenciador_selecionado}: {e}")
+
+with abas[1]:
+	influencers_ficheiros = st.session_state.get("influencers_ficheiros", {})
+	lista_consolidada = []
+
+	for i in influencers_ficheiros.keys():
+		try:
+			file = influencers_ficheiros.get(i)
+			file.seek(0)
+			file_bytes = file.read()
+	
+			# Carrega o conteúdo JSON como dicionário
+			data = json.load(io.BytesIO(file_bytes))
+			
+			username = data["user_profile"]["username"]
+			nome = data["user_profile"]["fullname"]
+
+			dispersion = int(round(perfis_e_dispersoes.get(username, "N/A"), 0))
+			alcance = format_milhar(data["user_profile"].get("avg_reels_plays"))
+			classe_social = get_classes_sociais_formatadas(df_classes_formatado, username)
+			escolaridade = get_escolaridades_formatadas(df_educacao_formatado, username)
+	
+			interesses = df_top_interesses_formatado.loc[
+				df_top_interesses_formatado["influencer"] == username,
+				"interesses_formatados"
+			].values
+			interesses = interesses[0] if len(interesses) > 0 else "N/A"
+	
+			lista_consolidada.append({
+				"Influencer (Username)": username,
+				"Influencer (Nome)": nome,
+				"Dispersão de interações": dispersion,
+				"Alcance médio esperado por post": alcance,
+				"Interesses da audiência": interesses,
+				"Classe social": classe_social,
+				"Escolaridade": escolaridade
+			})
+
+		except Exception as e:
+			st.error(f"❌ Erro ao processar dados de {i}: {e}")
+			st.text(traceback.format_exc())
+	
+	# Criar DataFrame final
+	df_resultado = pd.DataFrame(lista_consolidada)
+
+	# Nome do arquivo
+	file_name = "resumo_defesa_influenciadores.xlsx"
+	
+	# Converter o DataFrame para um objeto Excel em memória
+	output = io.BytesIO()
+	with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+	    df_resultado.to_excel(writer, index=False, sheet_name='Defesa Influenciadores')
+	    output.seek(0)
+	
+	# Exibir em Streamlit
+	st.title("Consolidação de Influenciadores")
+	st.table(df_resultado)
+
+	# Botão de download
+	st.download_button(
+	    label="📥 Baixar tabela de resumo como Excel",
+	    data=output,
+	    file_name=file_name,
+	    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+	)
 
