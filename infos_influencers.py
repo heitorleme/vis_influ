@@ -59,16 +59,16 @@ def get_color(value, min_val, max_val):
         # Interpolação entre vermelho (0) e verde (1)
         # Cores em RGB: Vermelho (255, 0, 0), Amarelo (255, 255, 0), Verde (0, 255, 0)
         # Para uma transição suave, podemos ir de vermelho para amarelo e depois para verde.
-        if normalized_value < 0.5:
+	if normalized_value < 0.5:
         # De vermelho para amarelo
-        red = 255
-        green = int(255 * (normalized_value * 2))
-        blue = 0
-        else:
+		red = 255
+		green = int(255 * (normalized_value * 2))
+		blue = 0
+	else:
         # De amarelo para verde
-        red = int(255 * (1 - (normalized_value - 0.5) * 2))
-        green = 255
-        blue = 0
+		red = int(255 * (1 - (normalized_value - 0.5) * 2))
+		green = 255
+		blue = 0
 	return f"rgb({red}, {green}, {blue})"
 
 # Função para formatar os valores com separador de milhar
