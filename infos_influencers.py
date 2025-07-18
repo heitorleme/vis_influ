@@ -111,7 +111,8 @@ with abas[0]:
 	st.session_state["influencers_ficheiros"] = influencers_ficheiros
 
 with abas[2]:
-	st.markdown("###Dispersão de Likes e Comments, por Influencer 🧐")
+	st.markdown("## Análise Geral 👨‍💻")
+	st.markdown("### Dispersão de Likes e Comments, por Influencer 🧐")
     # ============================
     # SEÇÃO: Cálculo da dispersão de likes/comentários 🔗
     # ============================
@@ -188,8 +189,7 @@ with abas[2]:
     # ============================
     # SEÇÃO: Estatísticas básicas (visualizações, engajamento, etc)
     # ============================
-	st.markdown("## Análise Geral 👨‍💻")
-	st.markdown("###Dados Básicos por Influencer 📊")
+	st.markdown("### Dados Básicos por Influencer 📊")
 
     # Dicionário para consolidar os dados
 	dados_consolidados = {}
@@ -233,47 +233,6 @@ with abas[2]:
         
 	except:
 		st.warning(f"Erro ao processar dados: {e}")
-
-	# ============================
-    # SEÇÃO: Extração de interesses da audiência 👫
-    # ============================
-	st.markdown("###Interesses da Audiência 👫")
-
-	df_top_interesses_formatado = pd.DataFrame(columns=["influencer", "interesses_formatados"])
-	
-	for i in influencers_ficheiros.keys():
-		try:
-			file = influencers_ficheiros.get(i)
-			file.seek(0)
-			file_bytes = file.read()
-			df_influ = pd.read_json(io.BytesIO(file_bytes))
-	
-			# Interesses - Top 5
-			interests_entries = df_influ.get("audience_followers", {}).get("data", {}).get("audience_interests", [])
-			if isinstance(interests_entries, list):
-				sorted_interests = sorted(interests_entries, key=lambda x: x.get("weight", 0), reverse=True)[:5]
-	
-			# Formatando os interesses com tradução, vírgulas e quebras de linha
-			interesses_formatados = "  \n".join([
-				f"{interests_translation.get(entry['name'], entry['name'])} ({entry['weight'] * 100:.2f}%)" + ("," if idx < len(sorted_interests) - 1 else "")
-				for idx, entry in enumerate(sorted_interests)
-				if 'name' in entry and 'weight' in entry
-			])
-	
-			# Montar a linha do DataFrame
-			df_top_interesses_formatado = pd.concat([
-				df_top_interesses_formatado,
-				pd.DataFrame([{
-					"influencer": i,
-					"interesses_formatados": interesses_formatados
-				}])
-			], ignore_index=True)
-	
-		except Exception as e:
-			st.warning(f"Erro ao processar dados de {i}: {e}")
-
-	# Exibir no Streamlit
-	st.table(df_top_interesses_formatado)
 
     # ============================
     # SEÇÃO: Histórico (6 meses) 📈
@@ -535,6 +494,47 @@ with abas[3]:
 			st.table(df_educacao_formatado)
 		except Exception as e:
 			st.error(f"Erro ao carregar ou processar a planilha de educação: {e}")
+
+	# ============================
+    # SEÇÃO: Extração de interesses da audiência 👫
+    # ============================
+	st.markdown("### Interesses da Audiência 👫")
+
+	df_top_interesses_formatado = pd.DataFrame(columns=["influencer", "interesses_formatados"])
+	
+	for i in influencers_ficheiros.keys():
+		try:
+			file = influencers_ficheiros.get(i)
+			file.seek(0)
+			file_bytes = file.read()
+			df_influ = pd.read_json(io.BytesIO(file_bytes))
+	
+			# Interesses - Top 5
+			interests_entries = df_influ.get("audience_followers", {}).get("data", {}).get("audience_interests", [])
+			if isinstance(interests_entries, list):
+				sorted_interests = sorted(interests_entries, key=lambda x: x.get("weight", 0), reverse=True)[:5]
+	
+			# Formatando os interesses com tradução, vírgulas e quebras de linha
+			interesses_formatados = "  \n".join([
+				f"{interests_translation.get(entry['name'], entry['name'])} ({entry['weight'] * 100:.2f}%)" + ("," if idx < len(sorted_interests) - 1 else "")
+				for idx, entry in enumerate(sorted_interests)
+				if 'name' in entry and 'weight' in entry
+			])
+	
+			# Montar a linha do DataFrame
+			df_top_interesses_formatado = pd.concat([
+				df_top_interesses_formatado,
+				pd.DataFrame([{
+					"influencer": i,
+					"interesses_formatados": interesses_formatados
+				}])
+			], ignore_index=True)
+	
+		except Exception as e:
+			st.warning(f"Erro ao processar dados de {i}: {e}")
+
+	# Exibir no Streamlit
+	st.table(df_top_interesses_formatado)
 
 ######################### Informações dos posts #################################
 # Publicações do Insta
