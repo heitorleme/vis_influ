@@ -111,7 +111,7 @@ with abas[0]:
 	st.session_state["influencers_ficheiros"] = influencers_ficheiros
 
 with abas[2]:
-
+	st.subheader("Dispersão de Likes e Comments, por Influencer 🧐")
     # ============================
     # SEÇÃO: Cálculo da dispersão de likes/comentários 🔗
     # ============================
@@ -128,7 +128,6 @@ with abas[2]:
 	for i in influencers_ficheiros.keys():
 		try:
 			perfis.append(i)
-
 
     # Iterar sobre os perfis, "zerar" as listas e puxar os dados de likes e comentários (últimos posts)
 			for perfil in perfis:
@@ -332,9 +331,6 @@ with abas[2]:
 
 ######################### Informações da audiência #################################
 with abas[3]:
-# Seleção do número de registros por influencer
-	top_n = st.selectbox("Quantas cidades deseja exibir por influencer?", [5, 10, 15, 20], index=0)
-
 	df_cidades_exibicao = df_cidades.copy()
 	df_cidades_exibicao.drop(columns=["coords.lat", "coords.lon", "country.id", "country.code", "state.id", "state.name", "id"], inplace=True, errors="ignore")
         
@@ -347,6 +343,11 @@ with abas[3]:
 
     # Mostrar tabela original
 	st.subheader("Cidades por Influencer 🌎")
+
+	# Seleção do número de registros por influencer
+	top_n = st.selectbox("Quantas cidades deseja exibir por influencer?", [5, 10, 15, 20], index=0)
+	df_cidades_exibicao = df_cidades_exibicao.sort_values(by=["influencer", "Porcentagem da audiência"], ascending=[True, False]).groupby("influencer").head(top_n)
+	
 	st.dataframe(df_cidades_exibicao)
 
     # Botão para exportar a tabela para Excel
