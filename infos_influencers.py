@@ -68,11 +68,11 @@ with abas[0]:
 
 		df_cidades = df_cidades[df_cidades["country.code"] == "BR"]
 		df_cidades.rename(columns={"name":"Cidade"}, inplace=True)
+		st.session_state["df_cidades"] = df_cidades
 		
 	else:
 		st.info("Por favor, carregue arquivos JSON para começar.")
 
-	st.session_state["df_cidades"] = df_cidades
 	st.session_state["dados_brutos"] = dados_brutos
 
 with abas[1]:
