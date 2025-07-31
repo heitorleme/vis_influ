@@ -81,17 +81,6 @@ with abas[0]:
 		pass
 
 with abas[1]:
-	# Inserir CSS personalizado
-	st.markdown("""
-	    <style>
-	        .main .block-container {
-	            max-width: 1600px;
-	            padding-left: 2rem;
-	            padding-right: 2rem;
-	        }
-	    </style>
-	""", unsafe_allow_html=True)
-	
 	if uploaded_files:
 		# Importar os session states relevantes
 		dados_brutos = st.session_state["dados_brutos"]
@@ -416,6 +405,6 @@ with abas[1]:
 		df_resumo = pd.DataFrame(resumo_influenciadores)
 		st.session_state["df_resumo"] = df_resumo
 	
-		st.dataframe(df_resumo, use_container_width=True)
+		st.table(df_resumo, use_container_width=True)
 	else:
 		st.warning("Por favor, faça o upload de arquivos JSON válidos na primeira aba")
