@@ -209,7 +209,7 @@ with abas[1]:
 		    lambda row: f"< 5 anos: {row['< 5 anos']:.2%}, \n"
 		                f"5-9 anos: {row['5-9 anos']:.2%}, \n"
 		                f"9-12 anos: {row['9-12 anos']:.2%}, \n"
-		                f"> 12 anos: {row['> 12 anos']:.2%}",
+		                f"acima de 12 anos: {row['> 12 anos']:.2%}",
 		    axis=1
 		)
 		
