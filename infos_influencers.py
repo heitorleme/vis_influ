@@ -32,6 +32,8 @@ with abas[0]:
 	# Inicialização
 	influencers = []
 	ficheiros = []
+	dados_brutos = {}
+	df_cidades = pd.DataFrame()
 	
 	if uploaded_files:
 		for file in uploaded_files:
@@ -46,7 +48,6 @@ with abas[0]:
 				else:
 					print(f"Aviso: O arquivo '{filename}' não segue o padrão esperado.")
 		influencers_ficheiros = dict(zip(influencers, ficheiros))
-		st.session_state["influencers_ficheiros"] = influencers_ficheiros
 
 		dados_brutos = {}
 
@@ -56,7 +57,6 @@ with abas[0]:
 			except:
 				print("Erro ao processar o arquivo para o influenciador {}".format(influencer))
 
-		df_cidades = pd.DataFrame()
 		for influencer in dados_brutos.keys():
 			try:
 				cities_entries = dados_brutos.get(influencer)["audience_followers"]["data"]["audience_geo"]["cities"]
@@ -68,12 +68,13 @@ with abas[0]:
 
 		df_cidades = df_cidades[df_cidades["country.code"] == "BR"]
 		df_cidades.rename(columns={"name":"Cidade"}, inplace=True)
-		st.session_state["df_cidades"] = df_cidades
 		
 	else:
 		st.info("Por favor, carregue arquivos JSON para começar.")
 
 	st.session_state["dados_brutos"] = dados_brutos
+	st.session_state["influencers_ficheiros"] = influencers_ficheiros
+	st.session_state["df_cidades"] = df_cidades
 
 with abas[1]:
 	# Importar os session states relevantes
