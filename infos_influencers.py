@@ -10,6 +10,7 @@ from matplotlib.ticker import FuncFormatter
 import requests
 import traceback
 
+st.set_page_config(layout="wide")
 abas = st.tabs(["Página Inicial 🏠", "Resumo 📄", "Influencer 👤", "Audiência 📊", "Publicações 📝"])
 
 with abas[0]:
@@ -406,4 +407,4 @@ with abas[1]:
 	
 		st.dataframe(df_resumo)
 	else:
-		st.write("Por favor, faça o upload de arquivos JSON válidos na primeira aba")
+		st.warning("Por favor, faça o upload de arquivos JSON válidos na primeira aba")
