@@ -65,7 +65,7 @@ with abas[0]:
 	ficheiros = []
 	
 	if uploaded_files:
-		for file in os.listdir(diretorio_jsons):
+		for file in uploaded_files:
 			if "desktop.ini" in file:
 				continue
 			else:
