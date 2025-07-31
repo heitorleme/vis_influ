@@ -81,7 +81,17 @@ with abas[0]:
 		pass
 
 with abas[1]:
-	if uploaded_files:
+	# Inserir CSS personalizado
+	st.markdown("""
+	    <style>
+	        .main .block-container {
+	            max-width: 1100px;
+	            padding-left: 2rem;
+	            padding-right: 2rem;
+	        }
+	    </style>
+	""", unsafe_allow_html=True)
+		if uploaded_files:
 		# Importar os session states relevantes
 		dados_brutos = st.session_state["dados_brutos"]
 		df_cidades = st.session_state["df_cidades"]
