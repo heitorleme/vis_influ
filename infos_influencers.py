@@ -404,7 +404,10 @@ with abas[1]:
 		# Criar o DataFrame
 		df_resumo = pd.DataFrame(resumo_influenciadores)
 		st.session_state["df_resumo"] = df_resumo
-	
-		st.table(df_resumo)
+
+		df_resumo_formatado = df_resumo.style.set_properties(**{
+		    'white-space': 'pre-wrap'
+		})
+		st.dataframe(df_resumo_formatado)
 	else:
 		st.warning("Por favor, faça o upload de arquivos JSON válidos na primeira aba")
