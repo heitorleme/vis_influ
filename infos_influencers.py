@@ -81,7 +81,7 @@ with abas[0]:
 
 		dados_brutos = {}
 
-		for influencer, arquivo_json in influencer_ficheiros.items():
+		for influencer, arquivo_json in influencers_ficheiros.items():
 			try:
 				dados_brutos[influencer] = json.load(arquivo_json)
 			except:
