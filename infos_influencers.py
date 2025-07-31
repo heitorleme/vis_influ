@@ -18,8 +18,8 @@ with abas[0]:
 	st.markdown("### Introdução")
 	st.markdown('''Este app tem a função de consolidar o processo de extração de dados de influenciadores anteriormente 
  				implementado manualmente, caso a caso. O resumo tradicionalmente disponibilizado está disponível na aba
-	 			Resumo, com a opção de download direto de um arquivo Excel. Separamos e adicionamos, ainda, dados e visualizações
-	 			relativas ao Influencer, à Audiência e às Publicações às outras abas.''')
+	 			Resumo, com a opção de download direto de um arquivo Excel. Num futuro próximo planejamos separar e adicionar, ainda, dados e visualizações
+	 			relativas ao Influencer, à Audiência e às Publicações a outras abas.''')
 
 	st.markdown("### Como utilizar")
 	st.markdown('''Os arquivos de input devem ser arquivos .json extraídos
