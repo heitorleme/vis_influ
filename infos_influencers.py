@@ -85,7 +85,7 @@ with abas[1]:
 	st.markdown("""
 	    <style>
 	        .main .block-container {
-	            max-width: 1100px;
+	            max-width: 1600px;
 	            padding-left: 2rem;
 	            padding-right: 2rem;
 	        }
