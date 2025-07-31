@@ -72,9 +72,12 @@ with abas[0]:
 	else:
 		st.info("Por favor, carregue arquivos JSON para começar.")
 
-	st.session_state["dados_brutos"] = dados_brutos
-	st.session_state["influencers_ficheiros"] = influencers_ficheiros
-	st.session_state["df_cidades"] = df_cidades
+	try:
+		st.session_state["dados_brutos"] = dados_brutos
+		st.session_state["influencers_ficheiros"] = influencers_ficheiros
+		st.session_state["df_cidades"] = df_cidades
+	except:
+		continue
 
 with abas[1]:
 	# Importar os session states relevantes
