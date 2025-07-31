@@ -10,7 +10,7 @@ from matplotlib.ticker import FuncFormatter
 import requests
 import traceback
 
-st.set_page_config(layout="wide")
+st.set_page_config(layout="centered")
 abas = st.tabs(["Página Inicial 🏠", "Resumo 📄", "Influencer 👤", "Audiência 📊", "Publicações 📝"])
 
 with abas[0]:
