@@ -106,9 +106,9 @@ with abas[1]:
 		result_classes[["Classes D e E", "Classe C", "Classe B", "Classe A"]] /= 100
 	
 		result_classes["distribuicao_formatada"] = result_classes.apply(
-		    lambda row: f"Classes D e E: {row['Classes D e E']:.2%}, \n"
-		                f"Classe C: {row['Classe C']:.2%}, \n"
-		                f"Classe B: {row['Classe B']:.2%}, \n"
+		    lambda row: f"Classes D e E: {row['Classes D e E']:.2%}, \n  "
+		                f"Classe C: {row['Classe C']:.2%}, \n  "
+		                f"Classe B: {row['Classe B']:.2%}, \n  "
 		                f"Classe A: {row['Classe A']:.2%}",
 		    axis=1
 		)
@@ -206,9 +206,9 @@ with abas[1]:
 		
 		# Adicionar coluna de distribuição formatada
 		result_edu["distribuicao_formatada"] = result_edu.apply(
-		    lambda row: f"< 5 anos: {row['< 5 anos']:.2%}, \n"
-		                f"5-9 anos: {row['5-9 anos']:.2%}, \n"
-		                f"9-12 anos: {row['9-12 anos']:.2%}, \n"
+		    lambda row: f"< 5 anos: {row['< 5 anos']:.2%}, \n  "
+		                f"5-9 anos: {row['5-9 anos']:.2%}, \n  "
+		                f"9-12 anos: {row['9-12 anos']:.2%}, \n  "
 		                f"acima de 12 anos: {row['> 12 anos']:.2%}",
 		    axis=1
 		)
