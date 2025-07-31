@@ -86,6 +86,7 @@ with abas[0]:
 					dados_brutos[influencer] = json.load(arquivo)
 			except:
 				print("Erro ao processar o arquivo para o influenciador {}".format(influencer))
+		st.session_state["dados_brutos"] = dados_brutos
 		
 	else:
 		st.info("Por favor, carregue arquivos JSON para começar.")
