@@ -80,7 +80,8 @@ with abas[1]:
 	dados_brutos = st.session_state["dados_brutos"]
 	df_cidades = st.session_state["df_cidades"]
 
-	st.write(st.session_state["dados_brutos"]
+	st.write(st.session_state["dados_brutos"])
+	st.write(st.session_state["df_cidades"])
 	
 	############ Classes sociais ############
 	classes_por_cidade = pd.read_excel(r"./dados/classes_sociais_por_cidade.xlsx")
