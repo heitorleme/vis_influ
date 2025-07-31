@@ -80,327 +80,330 @@ with abas[0]:
 		pass
 
 with abas[1]:
-	# Importar os session states relevantes
-	dados_brutos = st.session_state["dados_brutos"]
-	df_cidades = st.session_state["df_cidades"]
+	if uploaded_files:
+		# Importar os session states relevantes
+		dados_brutos = st.session_state["dados_brutos"]
+		df_cidades = st.session_state["df_cidades"]
+		
+		############ Classes sociais ############
+		classes_por_cidade = pd.read_excel(r"./dados/classes_sociais_por_cidade.xlsx")
+		classes_por_cidade.drop(columns=["Unnamed: 0"], inplace=True)
 	
-	############ Classes sociais ############
-	classes_por_cidade = pd.read_excel(r"./dados/classes_sociais_por_cidade.xlsx")
-	classes_por_cidade.drop(columns=["Unnamed: 0"], inplace=True)
-
-	df_classes_influ = df_cidades.copy()
-	df_classes_influ["normalized_weight"] = df_classes_influ.groupby("influencer")["weight"].transform(lambda x: (x/x.sum()))
-
-	df_merged_classes = pd.merge(df_classes_influ, classes_por_cidade, on=["Cidade"], how="inner")
-
-	df_merged_classes["normalized_classe_de"] = df_merged_classes["normalized_weight"] * df_merged_classes["Classes D e E"]
-	df_merged_classes["normalized_classe_c"] = df_merged_classes["normalized_weight"] * df_merged_classes["Classe C"]
-	df_merged_classes["normalized_classe_b"] = df_merged_classes["normalized_weight"] * df_merged_classes["Classe B"]
-	df_merged_classes["normalized_classe_a"] = df_merged_classes["normalized_weight"] * df_merged_classes["Classe A"]
-
-	result_classes = df_merged_classes.groupby("influencer")[["Classes D e E", "Classe C", "Classe B", "Classe A"]].mean()
-	result_classes = result_classes.round(2)
-
-	result_classes[["Classes D e E", "Classe C", "Classe B", "Classe A"]] /= 100
-
-	result_classes["distribuicao_formatada"] = result_classes.apply(
-	    lambda row: f"Classes D e E: {row['Classes D e E']:.2%}, \n"
-	                f"Classe C: {row['Classe C']:.2%}, \n"
-	                f"Classe B: {row['Classe B']:.2%}, \n"
-	                f"Classe A: {row['Classe A']:.2%}",
-	    axis=1
-	)
+		df_classes_influ = df_cidades.copy()
+		df_classes_influ["normalized_weight"] = df_classes_influ.groupby("influencer")["weight"].transform(lambda x: (x/x.sum()))
 	
-	# Trocar ponto por vírgula para notação percentual brasileira
-	result_classes["distribuicao_formatada"] = result_classes["distribuicao_formatada"].str.replace('.', ',', regex=False)
-	result_classes = result_classes.reset_index()
-	st.session_state["result_classes"] = result_classes
+		df_merged_classes = pd.merge(df_classes_influ, classes_por_cidade, on=["Cidade"], how="inner")
 	
-	# Converter em dicionário
-	classes_sociais_dict = result_classes.set_index('influencer')['distribuicao_formatada'].to_dict()
-	st.session_state["classes_sociais_dict"] = classes_sociais_dict
-
-	############ Educação ############
-	# Importar educação por cidade
-	educacao_por_cidade = pd.read_excel(r"./dados/educacao_por_cidade.xlsx")
+		df_merged_classes["normalized_classe_de"] = df_merged_classes["normalized_weight"] * df_merged_classes["Classes D e E"]
+		df_merged_classes["normalized_classe_c"] = df_merged_classes["normalized_weight"] * df_merged_classes["Classe C"]
+		df_merged_classes["normalized_classe_b"] = df_merged_classes["normalized_weight"] * df_merged_classes["Classe B"]
+		df_merged_classes["normalized_classe_a"] = df_merged_classes["normalized_weight"] * df_merged_classes["Classe A"]
 	
-	# Copiar df_cidades
-	df_cidades_edu = df_cidades.copy()
+		result_classes = df_merged_classes.groupby("influencer")[["Classes D e E", "Classe C", "Classe B", "Classe A"]].mean()
+		result_classes = result_classes.round(2)
 	
-	# Extrair gênero e idade das audiências
-	df_demografia_audiencia = pd.DataFrame()
-
-	for influencer in dados_brutos.keys():
-	    try:
-	        cities_entries = dados_brutos.get(influencer)["audience_followers"]["data"]["audience_genders_per_age"]
-	        df_temp = pd.json_normalize(cities_entries)
-	        df_temp["influencer"] = influencer
-	        df_demografia_audiencia = pd.concat([df_demografia_audiencia, df_temp])
-	    except Exception as e:
-	        st.warning(f"Sem registro de cidades para '{influencer}': {e}")
+		result_classes[["Classes D e E", "Classe C", "Classe B", "Classe A"]] /= 100
 	
-	# Unir os DataFrames de Cidades e Idades
-	df_unido = pd.merge(df_cidades_edu, df_demografia_audiencia, on="influencer")
-	df_unido.rename(columns={"code":"faixa etária"}, errors="raise", inplace=True)
+		result_classes["distribuicao_formatada"] = result_classes.apply(
+		    lambda row: f"Classes D e E: {row['Classes D e E']:.2%}, \n"
+		                f"Classe C: {row['Classe C']:.2%}, \n"
+		                f"Classe B: {row['Classe B']:.2%}, \n"
+		                f"Classe A: {row['Classe A']:.2%}",
+		    axis=1
+		)
+		
+		# Trocar ponto por vírgula para notação percentual brasileira
+		result_classes["distribuicao_formatada"] = result_classes["distribuicao_formatada"].str.replace('.', ',', regex=False)
+		result_classes = result_classes.reset_index()
+		st.session_state["result_classes"] = result_classes
+		
+		# Converter em dicionário
+		classes_sociais_dict = result_classes.set_index('influencer')['distribuicao_formatada'].to_dict()
+		st.session_state["classes_sociais_dict"] = classes_sociais_dict
 	
-	# Primeiro, soma total de weight por influencer
-	total_weight_por_influencer = df_unido.groupby("influencer")["weight"].transform("sum")
+		############ Educação ############
+		# Importar educação por cidade
+		educacao_por_cidade = pd.read_excel(r"./dados/educacao_por_cidade.xlsx")
+		
+		# Copiar df_cidades
+		df_cidades_edu = df_cidades.copy()
+		
+		# Extrair gênero e idade das audiências
+		df_demografia_audiencia = pd.DataFrame()
 	
-	# Depois, soma de weight por influencer + cidade
-	total_weight_por_cidade = df_unido.groupby(["influencer", "Cidade"])["weight"].transform("sum")
+		for influencer in dados_brutos.keys():
+		    try:
+		        cities_entries = dados_brutos.get(influencer)["audience_followers"]["data"]["audience_genders_per_age"]
+		        df_temp = pd.json_normalize(cities_entries)
+		        df_temp["influencer"] = influencer
+		        df_demografia_audiencia = pd.concat([df_demografia_audiencia, df_temp])
+		    except Exception as e:
+		        st.warning(f"Sem registro de cidades para '{influencer}': {e}")
+		
+		# Unir os DataFrames de Cidades e Idades
+		df_unido = pd.merge(df_cidades_edu, df_demografia_audiencia, on="influencer")
+		df_unido.rename(columns={"code":"faixa etária"}, errors="raise", inplace=True)
+		
+		# Primeiro, soma total de weight por influencer
+		total_weight_por_influencer = df_unido.groupby("influencer")["weight"].transform("sum")
+		
+		# Depois, soma de weight por influencer + cidade
+		total_weight_por_cidade = df_unido.groupby(["influencer", "Cidade"])["weight"].transform("sum")
+		
+		# Agora, atribuímos o weight normalizado (valor da cidade dividido pela soma total do influencer)
+		df_unido["weight_normalized"] = total_weight_por_cidade / total_weight_por_influencer
+		
+		# Normalizar os pesos dos gêneros
+		df_unido["male_weighted"] = df_unido["male"] * df_unido["weight_normalized"]
+		df_unido["female_weighted"] = df_unido["female"] * df_unido["weight_normalized"]
+		
+		# Verificar o dataframe
+		df_unido.rename(columns={"faixa etária":"Grupo Etário", "male":"Proporção Male", "female":"Proporção Female"}, inplace=True)
+		
+		# Unir com educação
+		df_unido_edu = df_unido.merge(educacao_por_cidade, on=["Cidade", "Grupo Etário"], how="left")
+		df_unido_edu.drop(columns=["Unnamed: 0"], inplace=True)
+		
+		# Construir anos_female e anos_male
+		df_unido_edu["anos_female"] = df_unido_edu["female_weighted"] * df_unido_edu["female"]
+		df_unido_edu["anos_male"] = df_unido_edu["male_weighted"] * df_unido_edu["male"]
+		
+		# Consolidar a média de anos de estudo, por influenciador
+		df_unido_edu.groupby("influencer")[["anos_female", "anos_male"]].sum().sum(axis=1)
+		
+		# Agrupar e somar anos de educação (feminino + masculino)
+		total_anos_por_influencer = df_unido_edu.groupby("influencer")[["anos_female", "anos_male"]].sum().sum(axis=1)
+		
+		# Criar distribuição normal para os anos de educação
+		std_dev = 3
+		samples = 1000
+		
+		# Lista para armazenar os dados
+		data = []
+		
+		# Iterar sobre os valores
+		for influencer, total_anos in total_anos_por_influencer.items():
+		    mean = total_anos  # Ajuste se necessário
+		    std_dev = std_dev       # Defina o desvio padrão
+		
+		    prob_less_5 = norm.cdf(5, mean, std_dev)
+		    prob_5_9 = norm.cdf(9, mean, std_dev) - norm.cdf(5, mean, std_dev)
+		    prob_9_12 = norm.cdf(12, mean, std_dev) - norm.cdf(9, mean, std_dev)
+		    prob_more_12 = 1 - norm.cdf(12, mean, std_dev)
+		
+		    # Adicionar ao dataset
+		    data.append({
+		        "Influencer": influencer,
+		        "< 5 anos": prob_less_5,
+		        "5-9 anos": prob_5_9,
+		        "9-12 anos": prob_9_12,
+		        "> 12 anos": prob_more_12
+		    })
+		
+		# Criar DataFrame
+		result_edu = pd.DataFrame(data)
+		
+		# Adicionar coluna de distribuição formatada
+		result_edu["distribuicao_formatada"] = result_edu.apply(
+		    lambda row: f"< 5 anos: {row['< 5 anos']:.2%}, \n"
+		                f"5-9 anos: {row['5-9 anos']:.2%}, \n"
+		                f"9-12 anos: {row['9-12 anos']:.2%}, \n"
+		                f"> 12 anos: {row['> 12 anos']:.2%}",
+		    axis=1
+		)
+		
+		# Trocar ponto por vírgula na formatação percentual
+		result_edu["distribuicao_formatada"] = result_edu["distribuicao_formatada"].str.replace('.', ',', regex=False)
+		escolaridade_dict = result_edu.set_index('Influencer')['distribuicao_formatada'].to_dict()
 	
-	# Agora, atribuímos o weight normalizado (valor da cidade dividido pela soma total do influencer)
-	df_unido["weight_normalized"] = total_weight_por_cidade / total_weight_por_influencer
+		st.session_state["escolaridade_dict"] = escolaridade_dict
 	
-	# Normalizar os pesos dos gêneros
-	df_unido["male_weighted"] = df_unido["male"] * df_unido["weight_normalized"]
-	df_unido["female_weighted"] = df_unido["female"] * df_unido["weight_normalized"]
+		############ Dispersão ############
+		# Inicializar um dicionário para armazenar os resultados
+		dispersao_influencers = {}
+		
+		# Criar um for para obter os dados para cada influencer
+		for influencer in dados_brutos.keys():
+			try:
+		        # Reiniciar listas
+				likes = []
+				comments = []
+		        
+		        # Obter os dados
+				recent_posts = dados_brutos.get(influencer)["user_profile"]["recent_posts"]
+				df_temp = pd.json_normalize(recent_posts)
+		
+		        # Append os valores de likes e comments às listas
+				for i in range(df_temp.shape[0]):
+					comments.append(df_temp.loc[i, "stat.comments"])
+					try:
+						likes.append(df_temp.loc[i, "stat.likes"])
+					except:
+						continue
+		
+		        # Garante que valores sejam inteiros, ou 0 se vazios
+				likes = [int(like) if not (like is None or np.isnan(like)) else 0 for like in likes]
+				comments = [int(comment) if not (comment is None or np.isnan(comment)) else 0 for comment in comments]
+		
+		        # Calcular dispersão apenas se houver dados válidos
+				if len(likes) == 0 and len(comments) == 0:
+					raise ValueError("Sem dados de likes nem comments")
+		
+		        # Inicializar variáveis
+				media_likes = media_comments = 0
+				desvpad_normalizado_likes = desvpad_normalizado_comments = 0
+		
+				if len(likes) > 0 and np.sum(likes) > 0:
+					media_likes = np.mean(likes)
+					desvpad_likes = np.std(likes)
+					desvpad_normalizado_likes = (desvpad_likes / media_likes) * 100 if media_likes != 0 else 0
+		
+				if len(comments) > 0 and np.sum(comments) > 0:
+					media_comments = np.mean(comments)
+					desvpad_comments = np.std(comments)
+					desvpad_normalizado_comments = (desvpad_comments / media_comments) * 100 if media_comments != 0 else 0
+		
+		        # Adicionar ao dicionário
+				if desvpad_normalizado_likes > 0:
+					dispersao_influencers[influencer] = round((desvpad_normalizado_comments + desvpad_normalizado_likes) / 2, 0)
+				else:
+					dispersao_influencers[influencer] = round(desvpad_normalizado_comments, 0)
+		
+			except Exception as e:
+				print(f"Sem registros para '{influencer}': {e}")
+		
+		df_dispersao = pd.DataFrame.from_dict(dispersao_influencers, orient="index").reset_index()
+		df_dispersao.rename(columns={"index":"Influencer", 0:"Dispersão"}, inplace=True)
+		df_dispersao["Dispersão"] = df_dispersao["Dispersão"].astype(int)
 	
-	# Verificar o dataframe
-	df_unido.rename(columns={"faixa etária":"Grupo Etário", "male":"Proporção Male", "female":"Proporção Female"}, inplace=True)
+		st.session_state["dispersao_influencers"] = dispersao_influencers
+		st.session_state["df_dispersao"] = df_dispersao
 	
-	# Unir com educação
-	df_unido_edu = df_unido.merge(educacao_por_cidade, on=["Cidade", "Grupo Etário"], how="left")
-	df_unido_edu.drop(columns=["Unnamed: 0"], inplace=True)
+		############ Interesses ############
+		# Consolidar interesses
+		df_interesses = pd.DataFrame()
+		
+		for influencer in dados_brutos.keys():
+			try:
+				audience_interests = dados_brutos[influencer]["audience_followers"]["data"]["audience_interests"]
+				df_temp = pd.json_normalize(audience_interests)
+				df_temp["influencer"] = influencer
+				df_interesses = pd.concat([df_interesses, df_temp])
+			except Exception as e:
+				print(e)
 	
-	# Construir anos_female e anos_male
-	df_unido_edu["anos_female"] = df_unido_edu["female_weighted"] * df_unido_edu["female"]
-	df_unido_edu["anos_male"] = df_unido_edu["male_weighted"] * df_unido_edu["male"]
+		# Dicionário de tradução dos interesses
+		interests_translation = {
+			"Activewear": "Roupas Esportivas",
+			"Friends, Family & Relationships": "Amigos, Família e Relacionamentos",
+			"Clothes, Shoes, Handbags & Accessories": "Moda",
+			"Beauty & Cosmetics": "Beleza e Cosméticos",
+			"Camera & Photography": "Fotografia",
+			"Toys, Children & Baby": "Brinquedos, Crianças e Bebês",
+			"Television & Film": "Televisão e Filmes",
+			"Restaurants, Food & Grocery": "Restaurantes e Gastronomia",
+			"Music": "Música",
+			"Fitness & Yoga": "Fitness e Yoga",
+			"Travel, Tourism & Aviation": "Turismo e Aviação",
+			"Pets": "Animais de Estimação",
+			"Cars & Motorbikes": "Carros e Motocicletas",
+			"Beer, Wine & Spirits": "Cerveja, Vinho e Bebidas Alcoólicas",
+			"Art & Design": "Arte e Design",
+			"Sports": "Esportes",
+			"Electronics & Computers": "Eletrônicos e Computadores",
+			"Healthy Lifestyle": "Estilo de Vida Saudável",
+			"Shopping & Retail": "Compras e Varejo",
+			"Coffee, Tea & Beverages": "Café, Chá e Bebidas Quentes",
+			"Jewellery & Watches": "Joias e Relógios",
+			"Luxury Goods": "Artigos de Luxo",
+			"Home Decor, Furniture & Garden": "Decoração, Móveis e Jardim",
+			"Wedding": "Casamento",
+			"Gaming": "Jogos Digitais",
+			"Business & Careers": "Negócios e Carreiras",
+			"Healthcare & Medicine": "Saúde e Medicina"
+		}
 	
-	# Consolidar a média de anos de estudo, por influenciador
-	df_unido_edu.groupby("influencer")[["anos_female", "anos_male"]].sum().sum(axis=1)
+		# Traduzir o interesse
+		df_interesses["name"] = df_interesses["name"].replace(interests_translation)
+		df_interesses["weight"] = df_interesses["weight"] * 100
 	
-	# Agrupar e somar anos de educação (feminino + masculino)
-	total_anos_por_influencer = df_unido_edu.groupby("influencer")[["anos_female", "anos_male"]].sum().sum(axis=1)
+		# Para cada influenciador, obter os top 5 interesses formatados
+		def format_top_interests(group):
+			top5 = group.nlargest(5, "weight").reset_index(drop=True)
+			lines = []
+			for i, row in top5.iterrows():
+			# Formata com vírgula decimal
+				formatted_weight = f"{row['weight']:.2f}".replace(".", ",")
+	        # Adiciona vírgula ao final se não for o último item
+				suffix = "," if i < len(top5) - 1 else ""
+				lines.append(f"{row['name']} ({formatted_weight}%){suffix}")
+			return "\n".join(lines)
 	
-	# Criar distribuição normal para os anos de educação
-	std_dev = 3
-	samples = 1000
+		# Aplica a função a cada grupo
+		result_interesses = df_interesses.groupby("influencer").apply(format_top_interests).reset_index()
+		
+		# Renomeia a coluna com os resultados
+		result_interesses.columns = ["influencer", "top_interesses"]
+		st.session_state["result_interesses"] = result_interesses
+		
+		# Converter em dicionário
+		interesses_dict = result_interesses.set_index('influencer')['top_interesses'].to_dict()
+		st.session_state["interesses_dict"] = interesses_dict
 	
-	# Lista para armazenar os dados
-	data = []
+		############ Outros dados ############
+		nomes_influenciadores = {}
+		score_audiencia_influenciadores = {}
+		alcance_medio_influenciadores = {}
 	
-	# Iterar sobre os valores
-	for influencer, total_anos in total_anos_por_influencer.items():
-	    mean = total_anos  # Ajuste se necessário
-	    std_dev = std_dev       # Defina o desvio padrão
+		for influencer in dados_brutos.keys():
+	    # Encontrar nome do influenciador
+			try:
+				nomes_influenciadores[influencer] = dados_brutos[influencer]["user_profile"]["fullname"]
+			except:
+				nomes_influenciadores[influencer] = influencer
+				print("Não foi possível encontrar o nome do influenciador {}".format(influencer))
 	
-	    prob_less_5 = norm.cdf(5, mean, std_dev)
-	    prob_5_9 = norm.cdf(9, mean, std_dev) - norm.cdf(5, mean, std_dev)
-	    prob_9_12 = norm.cdf(12, mean, std_dev) - norm.cdf(9, mean, std_dev)
-	    prob_more_12 = 1 - norm.cdf(12, mean, std_dev)
+		st.session_state["nomes_influenciadores"] = nomes_influenciadores
 	
-	    # Adicionar ao dataset
-	    data.append({
-	        "Influencer": influencer,
-	        "< 5 anos": prob_less_5,
-	        "5-9 anos": prob_5_9,
-	        "9-12 anos": prob_9_12,
-	        "> 12 anos": prob_more_12
-	    })
-	
-	# Criar DataFrame
-	result_edu = pd.DataFrame(data)
-	
-	# Adicionar coluna de distribuição formatada
-	result_edu["distribuicao_formatada"] = result_edu.apply(
-	    lambda row: f"< 5 anos: {row['< 5 anos']:.2%}, \n"
-	                f"5-9 anos: {row['5-9 anos']:.2%}, \n"
-	                f"9-12 anos: {row['9-12 anos']:.2%}, \n"
-	                f"> 12 anos: {row['> 12 anos']:.2%}",
-	    axis=1
-	)
-	
-	# Trocar ponto por vírgula na formatação percentual
-	result_edu["distribuicao_formatada"] = result_edu["distribuicao_formatada"].str.replace('.', ',', regex=False)
-	escolaridade_dict = result_edu.set_index('Influencer')['distribuicao_formatada'].to_dict()
-
-	st.session_state["escolaridade_dict"] = escolaridade_dict
-
-	############ Dispersão ############
-	# Inicializar um dicionário para armazenar os resultados
-	dispersao_influencers = {}
-	
-	# Criar um for para obter os dados para cada influencer
-	for influencer in dados_brutos.keys():
+	    # Encontrar credibilidade da audiência
 		try:
-	        # Reiniciar listas
-			likes = []
-			comments = []
-	        
-	        # Obter os dados
-			recent_posts = dados_brutos.get(influencer)["user_profile"]["recent_posts"]
-			df_temp = pd.json_normalize(recent_posts)
-	
-	        # Append os valores de likes e comments às listas
-			for i in range(df_temp.shape[0]):
-				comments.append(df_temp.loc[i, "stat.comments"])
-				try:
-					likes.append(df_temp.loc[i, "stat.likes"])
-				except:
-					continue
-	
-	        # Garante que valores sejam inteiros, ou 0 se vazios
-			likes = [int(like) if not (like is None or np.isnan(like)) else 0 for like in likes]
-			comments = [int(comment) if not (comment is None or np.isnan(comment)) else 0 for comment in comments]
-	
-	        # Calcular dispersão apenas se houver dados válidos
-			if len(likes) == 0 and len(comments) == 0:
-				raise ValueError("Sem dados de likes nem comments")
-	
-	        # Inicializar variáveis
-			media_likes = media_comments = 0
-			desvpad_normalizado_likes = desvpad_normalizado_comments = 0
-	
-			if len(likes) > 0 and np.sum(likes) > 0:
-				media_likes = np.mean(likes)
-				desvpad_likes = np.std(likes)
-				desvpad_normalizado_likes = (desvpad_likes / media_likes) * 100 if media_likes != 0 else 0
-	
-			if len(comments) > 0 and np.sum(comments) > 0:
-				media_comments = np.mean(comments)
-				desvpad_comments = np.std(comments)
-				desvpad_normalizado_comments = (desvpad_comments / media_comments) * 100 if media_comments != 0 else 0
-	
-	        # Adicionar ao dicionário
-			if desvpad_normalizado_likes > 0:
-				dispersao_influencers[influencer] = round((desvpad_normalizado_comments + desvpad_normalizado_likes) / 2, 0)
-			else:
-				dispersao_influencers[influencer] = round(desvpad_normalizado_comments, 0)
-	
-		except Exception as e:
-			print(f"Sem registros para '{influencer}': {e}")
-	
-	df_dispersao = pd.DataFrame.from_dict(dispersao_influencers, orient="index").reset_index()
-	df_dispersao.rename(columns={"index":"Influencer", 0:"Dispersão"}, inplace=True)
-	df_dispersao["Dispersão"] = df_dispersao["Dispersão"].astype(int)
-
-	st.session_state["dispersao_influencers"] = dispersao_influencers
-	st.session_state["df_dispersao"] = df_dispersao
-
-	############ Interesses ############
-	# Consolidar interesses
-	df_interesses = pd.DataFrame()
-	
-	for influencer in dados_brutos.keys():
-		try:
-			audience_interests = dados_brutos[influencer]["audience_followers"]["data"]["audience_interests"]
-			df_temp = pd.json_normalize(audience_interests)
-			df_temp["influencer"] = influencer
-			df_interesses = pd.concat([df_interesses, df_temp])
-		except Exception as e:
-			print(e)
-
-	# Dicionário de tradução dos interesses
-	interests_translation = {
-		"Activewear": "Roupas Esportivas",
-		"Friends, Family & Relationships": "Amigos, Família e Relacionamentos",
-		"Clothes, Shoes, Handbags & Accessories": "Moda",
-		"Beauty & Cosmetics": "Beleza e Cosméticos",
-		"Camera & Photography": "Fotografia",
-		"Toys, Children & Baby": "Brinquedos, Crianças e Bebês",
-		"Television & Film": "Televisão e Filmes",
-		"Restaurants, Food & Grocery": "Restaurantes e Gastronomia",
-		"Music": "Música",
-		"Fitness & Yoga": "Fitness e Yoga",
-		"Travel, Tourism & Aviation": "Turismo e Aviação",
-		"Pets": "Animais de Estimação",
-		"Cars & Motorbikes": "Carros e Motocicletas",
-		"Beer, Wine & Spirits": "Cerveja, Vinho e Bebidas Alcoólicas",
-		"Art & Design": "Arte e Design",
-		"Sports": "Esportes",
-		"Electronics & Computers": "Eletrônicos e Computadores",
-		"Healthy Lifestyle": "Estilo de Vida Saudável",
-		"Shopping & Retail": "Compras e Varejo",
-		"Coffee, Tea & Beverages": "Café, Chá e Bebidas Quentes",
-		"Jewellery & Watches": "Joias e Relógios",
-		"Luxury Goods": "Artigos de Luxo",
-		"Home Decor, Furniture & Garden": "Decoração, Móveis e Jardim",
-		"Wedding": "Casamento",
-		"Gaming": "Jogos Digitais",
-		"Business & Careers": "Negócios e Carreiras",
-		"Healthcare & Medicine": "Saúde e Medicina"
-	}
-
-	# Traduzir o interesse
-	df_interesses["name"] = df_interesses["name"].replace(interests_translation)
-	df_interesses["weight"] = df_interesses["weight"] * 100
-
-	# Para cada influenciador, obter os top 5 interesses formatados
-	def format_top_interests(group):
-		top5 = group.nlargest(5, "weight").reset_index(drop=True)
-		lines = []
-		for i, row in top5.iterrows():
-		# Formata com vírgula decimal
-			formatted_weight = f"{row['weight']:.2f}".replace(".", ",")
-        # Adiciona vírgula ao final se não for o último item
-			suffix = "," if i < len(top5) - 1 else ""
-			lines.append(f"{row['name']} ({formatted_weight}%){suffix}")
-		return "\n".join(lines)
-
-	# Aplica a função a cada grupo
-	result_interesses = df_interesses.groupby("influencer").apply(format_top_interests).reset_index()
-	
-	# Renomeia a coluna com os resultados
-	result_interesses.columns = ["influencer", "top_interesses"]
-	st.session_state["result_interesses"] = result_interesses
-	
-	# Converter em dicionário
-	interesses_dict = result_interesses.set_index('influencer')['top_interesses'].to_dict()
-	st.session_state["interesses_dict"] = interesses_dict
-
-	############ Outros dados ############
-	nomes_influenciadores = {}
-	score_audiencia_influenciadores = {}
-	alcance_medio_influenciadores = {}
-
-	for influencer in dados_brutos.keys():
-    # Encontrar nome do influenciador
-		try:
-			nomes_influenciadores[influencer] = dados_brutos[influencer]["user_profile"]["fullname"]
+			score_audiencia_influenciadores[influencer] = int(dados_brutos[influencer]["audience_followers"]["data"]["audience_credibility"] * 100)
 		except:
-			nomes_influenciadores[influencer] = influencer
-			print("Não foi possível encontrar o nome do influenciador {}".format(influencer))
-
-	st.session_state["nomes_influenciadores"] = nomes_influenciadores
-
-    # Encontrar credibilidade da audiência
-	try:
-		score_audiencia_influenciadores[influencer] = int(dados_brutos[influencer]["audience_followers"]["data"]["audience_credibility"] * 100)
-	except:
-		score_audiencia_influenciadores["influencer"] = "N/A"
-		print("Não foi possível encontrar a credibilidade da audiência do influenciador {}".format(influencer))
-
-	st.session_state["score_audiencia_influenciadores"] = score_audiencia_influenciadores
-
-    # Encontrar e formatar média de Plays em Reels
-	try:
-		valor = dados_brutos[influencer]["user_profile"]["avg_reels_plays"]
-		alcance_medio_influenciadores[influencer] = f"{valor:,}".replace(",", ".")
-	except:
-		alcance_medio_influenciadores[influencer] = "N/A"
-		print("Não foi possível encontrar o alcance do influenciador {}".format(influencer))
-
-	st.session_state["alcance_medio_influenciadores"] = alcance_medio_influenciadores
-
-	############ Consolidar o DF final ############
-# Lista para armazenar os dados de cada influenciador
-	resumo_influenciadores = []
+			score_audiencia_influenciadores["influencer"] = "N/A"
+			print("Não foi possível encontrar a credibilidade da audiência do influenciador {}".format(influencer))
 	
-	for influencer in dados_brutos.keys():
-		resumo_influenciadores.append({
-			"Username do influenciador": influencer,
-			"Nome do influenciador": nomes_influenciadores.get(influencer),
-			"Score da audiência": int(score_audiencia_influenciadores.get(influencer, 0)),
-			"Dispersão de interações": int(dispersao_influencers.get(influencer, 0)),
-			"Alcance médio esperado": alcance_medio_influenciadores.get(influencer),
-			"Interesses da audiência": interesses_dict.get(influencer),
-			"Classes sociais": classes_sociais_dict.get(influencer),
-			"Escolaridade": escolaridade_dict.get(influencer),
-		})
+		st.session_state["score_audiencia_influenciadores"] = score_audiencia_influenciadores
 	
-	# Criar o DataFrame
-	df_resumo = pd.DataFrame(resumo_influenciadores)
-	st.session_state["df_resumo"] = df_resumo
-
-	st.dataframe(df_resumo)
+	    # Encontrar e formatar média de Plays em Reels
+		try:
+			valor = dados_brutos[influencer]["user_profile"]["avg_reels_plays"]
+			alcance_medio_influenciadores[influencer] = f"{valor:,}".replace(",", ".")
+		except:
+			alcance_medio_influenciadores[influencer] = "N/A"
+			print("Não foi possível encontrar o alcance do influenciador {}".format(influencer))
+	
+		st.session_state["alcance_medio_influenciadores"] = alcance_medio_influenciadores
+	
+		############ Consolidar o DF final ############
+	# Lista para armazenar os dados de cada influenciador
+		resumo_influenciadores = []
+		
+		for influencer in dados_brutos.keys():
+			resumo_influenciadores.append({
+				"Username do influenciador": influencer,
+				"Nome do influenciador": nomes_influenciadores.get(influencer),
+				"Score da audiência": int(score_audiencia_influenciadores.get(influencer, 0)),
+				"Dispersão de interações": int(dispersao_influencers.get(influencer, 0)),
+				"Alcance médio esperado": alcance_medio_influenciadores.get(influencer),
+				"Interesses da audiência": interesses_dict.get(influencer),
+				"Classes sociais": classes_sociais_dict.get(influencer),
+				"Escolaridade": escolaridade_dict.get(influencer),
+			})
+		
+		# Criar o DataFrame
+		df_resumo = pd.DataFrame(resumo_influenciadores)
+		st.session_state["df_resumo"] = df_resumo
+	
+		st.dataframe(df_resumo)
+	else:
+		st.write("Por favor, faça o upload de arquivos JSON válidos na primeira aba")
