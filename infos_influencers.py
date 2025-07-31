@@ -405,6 +405,6 @@ with abas[1]:
 		df_resumo = pd.DataFrame(resumo_influenciadores)
 		st.session_state["df_resumo"] = df_resumo
 	
-		st.dataframe(df_resumo)
+		st.dataframe(df_resumo, use_container_width=True)
 	else:
 		st.warning("Por favor, faça o upload de arquivos JSON válidos na primeira aba")
