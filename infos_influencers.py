@@ -338,7 +338,7 @@ with abas[1]:
 	        # Adiciona vírgula ao final se não for o último item
 				suffix = "," if i < len(top5) - 1 else ""
 				lines.append(f"{row['name']} ({formatted_weight}%){suffix}")
-			return "\n  ".join(lines)
+			return "  \n".join(lines)
 	
 		# Aplica a função a cada grupo
 		result_interesses = df_interesses.groupby("influencer").apply(format_top_interests).reset_index()
