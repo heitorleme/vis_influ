@@ -55,6 +55,7 @@ with abas[0]:
 				dados_brutos[influencer] = json.load(arquivo_json)
 			except:
 				print("Erro ao processar o arquivo para o influenciador {}".format(influencer))
+		
 		st.session_state["dados_brutos"] = dados_brutos
 
 		df_cidades = pd.DataFrame()
