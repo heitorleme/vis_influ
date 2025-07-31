@@ -91,7 +91,8 @@ with abas[1]:
 	        }
 	    </style>
 	""", unsafe_allow_html=True)
-		if uploaded_files:
+	
+	if uploaded_files:
 		# Importar os session states relevantes
 		dados_brutos = st.session_state["dados_brutos"]
 		df_cidades = st.session_state["df_cidades"]
