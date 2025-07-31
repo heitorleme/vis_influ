@@ -70,7 +70,7 @@ with abas[0]:
 				continue
 			else:
 				ficheiros.append(file)
-				partes = file.split("_")
+				partes = file.str.split("_")
 				if len(partes) > 1:  # Verifica se há pelo menos dois elementos após o split
 					influencers.append(partes[1][:-5])
 				else:
