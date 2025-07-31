@@ -353,11 +353,11 @@ with abas[1]:
 
 	for influencer in dados_brutos.keys():
     # Encontrar nome do influenciador
-	try:
-		nomes_influenciadores[influencer] = dados_brutos[influencer]["user_profile"]["fullname"]
-	except:
-		nomes_influenciadores[influencer] = influencer
-		print("Não foi possível encontrar o nome do influenciador {}".format(influencer))
+		try:
+			nomes_influenciadores[influencer] = dados_brutos[influencer]["user_profile"]["fullname"]
+		except:
+			nomes_influenciadores[influencer] = influencer
+			print("Não foi possível encontrar o nome do influenciador {}".format(influencer))
 
 	st.session_state["nomes_influenciadores"] = nomes_influenciadores
 
