@@ -405,6 +405,19 @@ with abas[1]:
 		df_resumo = pd.DataFrame(resumo_influenciadores)
 		st.session_state["df_resumo"] = df_resumo
 
+		st.markdown("# Consolidação de dados para os influenciadores")
 		st.table(df_resumo)
+
+		if not df_resumo.empty:			
+			agora = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
+			file_name = "resumo_defesa_influenciadores_{}.xlsx".format(agora)
+			output = io.BytesIO()
+			with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+				df_resumo.to_excel(writer, index=False, sheet_name='Defesa Influenciadores')
+			output.seek(0)
+			st.download_button(label="📥 Baixar o resumo em formato .xlsx",
+							  data=output,
+							  file_name=file_name,
+							  mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
 	else:
 		st.warning("Por favor, faça o upload de arquivos JSON válidos na primeira aba")
