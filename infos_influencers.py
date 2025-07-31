@@ -10,7 +10,7 @@ from matplotlib.ticker import FuncFormatter
 import requests
 import traceback
 
-st.set_page_config(layout="centered")
+st.set_page_config(layout="wide")
 abas = st.tabs(["Página Inicial 🏠", "Resumo 📄", "Influencer 👤", "Audiência 📊", "Publicações 📝"])
 
 with abas[0]:
@@ -81,7 +81,6 @@ with abas[0]:
 		pass
 
 with abas[1]:
-	st.set_page_config(layout="wide")
 	if uploaded_files:
 		# Importar os session states relevantes
 		dados_brutos = st.session_state["dados_brutos"]
