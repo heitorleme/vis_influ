@@ -34,6 +34,7 @@ with abas[0]:
 	ficheiros = []
 	
 	if uploaded_files:
+		st.write(uploaded_files)
 		for file in uploaded_files:
 			filename = file.name
 			if "desktop.ini" in filename:
