@@ -11,7 +11,7 @@ import requests
 import traceback
 
 st.set_page_config(layout="wide")
-abas = st.tabs(["Página Inicial 🏠", "Resumo 📄", "Influencer 👤", "Audiência 📊", "Publicações 📝"])
+abas = st.tabs(["Página Inicial 🏠", "Resumo 📄"])
 
 with abas[0]:
 	st.title("Análise de influenciadores")
