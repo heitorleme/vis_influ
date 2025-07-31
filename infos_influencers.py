@@ -77,7 +77,7 @@ with abas[0]:
 		st.session_state["influencers_ficheiros"] = influencers_ficheiros
 		st.session_state["df_cidades"] = df_cidades
 	except:
-		continue
+		pass
 
 with abas[1]:
 	# Importar os session states relevantes
