@@ -10,37 +10,6 @@ from matplotlib.ticker import FuncFormatter
 import requests
 import traceback
 
-# Dicionário de tradução dos interesses
-interests_translation = {
-	"Activewear": "Roupas Esportivas",
-	"Friends, Family & Relationships": "Amigos, Família e Relacionamentos",
-	"Clothes, Shoes, Handbags & Accessories": "Moda",
-	"Beauty & Cosmetics": "Beleza e Cosméticos",
-	"Camera & Photography": "Fotografia",
-	"Toys, Children & Baby": "Brinquedos, Crianças e Bebês",
-	"Television & Film": "Televisão e Filmes",
-	"Restaurants, Food & Grocery": "Restaurantes e Gastronomia",
-	"Music": "Música",
-	"Fitness & Yoga": "Fitness e Yoga",
-	"Travel, Tourism & Aviation": "Turismo e Aviação",
-	"Pets": "Animais de Estimação",
-	"Cars & Motorbikes": "Carros e Motocicletas",
-	"Beer, Wine & Spirits": "Cerveja, Vinho e Bebidas Alcoólicas",
-	"Art & Design": "Arte e Design",
-	"Sports": "Esportes",
-	"Electronics & Computers": "Eletrônicos e Computadores",
-	"Healthy Lifestyle": "Estilo de Vida Saudável",
-	"Shopping & Retail": "Compras e Varejo",
-	"Coffee, Tea & Beverages": "Café, Chá e Bebidas Quentes",
-	"Jewellery & Watches": "Joias e Relógios",
-	"Luxury Goods": "Artigos de Luxo",
-	"Home Decor, Furniture & Garden": "Decoração, Móveis e Jardim",
-	"Wedding": "Casamento",
-	"Gaming": "Jogos Digitais",
-	"Business & Careers": "Negócios e Carreiras",
-	"Healthcare & Medicine": "Saúde e Medicina"
-}
-
 abas = st.tabs(["Página Inicial 🏠", "Resumo 📄", "Influencer 👤", "Audiência 📊", "Publicações 📝"])
 
 with abas[0]:
