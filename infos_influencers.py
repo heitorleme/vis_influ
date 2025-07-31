@@ -364,26 +364,26 @@ with abas[1]:
 				nomes_influenciadores[influencer] = influencer
 				print("Não foi possível encontrar o nome do influenciador {}".format(influencer))
 	
-		st.session_state["nomes_influenciadores"] = nomes_influenciadores
-	
-	    # Encontrar credibilidade da audiência
-		try:
-			score_audiencia_influenciadores[influencer] = int(dados_brutos[influencer]["audience_followers"]["data"]["audience_credibility"] * 100)
-		except:
-			score_audiencia_influenciadores["influencer"] = "N/A"
-			print("Não foi possível encontrar a credibilidade da audiência do influenciador {}".format(influencer))
-	
-		st.session_state["score_audiencia_influenciadores"] = score_audiencia_influenciadores
-	
-	    # Encontrar e formatar média de Plays em Reels
-		try:
-			valor = dados_brutos[influencer]["user_profile"]["avg_reels_plays"]
-			alcance_medio_influenciadores[influencer] = f"{valor:,}".replace(",", ".")
-		except:
-			alcance_medio_influenciadores[influencer] = "N/A"
-			print("Não foi possível encontrar o alcance do influenciador {}".format(influencer))
-	
-		st.session_state["alcance_medio_influenciadores"] = alcance_medio_influenciadores
+			st.session_state["nomes_influenciadores"] = nomes_influenciadores
+		
+		    # Encontrar credibilidade da audiência
+			try:
+				score_audiencia_influenciadores[influencer] = int(dados_brutos[influencer]["audience_followers"]["data"]["audience_credibility"] * 100)
+			except:
+				score_audiencia_influenciadores["influencer"] = "N/A"
+				print("Não foi possível encontrar a credibilidade da audiência do influenciador {}".format(influencer))
+		
+			st.session_state["score_audiencia_influenciadores"] = score_audiencia_influenciadores
+		
+		    # Encontrar e formatar média de Plays em Reels
+			try:
+				valor = dados_brutos[influencer]["user_profile"]["avg_reels_plays"]
+				alcance_medio_influenciadores[influencer] = f"{valor:,}".replace(",", ".")
+			except:
+				alcance_medio_influenciadores[influencer] = "N/A"
+				print("Não foi possível encontrar o alcance do influenciador {}".format(influencer))
+		
+			st.session_state["alcance_medio_influenciadores"] = alcance_medio_influenciadores
 	
 		############ Consolidar o DF final ############
 		# Lista para armazenar os dados de cada influenciador
