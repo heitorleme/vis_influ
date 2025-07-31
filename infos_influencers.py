@@ -79,6 +79,8 @@ with abas[1]:
 	# Importar os session states relevantes
 	dados_brutos = st.session_state["dados_brutos"]
 	df_cidades = st.session_state["df_cidades"]
+
+	st.write(st.session_state["dados_brutos"]
 	
 	############ Classes sociais ############
 	classes_por_cidade = pd.read_excel(r"./dados/classes_sociais_por_cidade.xlsx")
