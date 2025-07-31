@@ -405,7 +405,7 @@ with abas[1]:
 		df_resumo = pd.DataFrame(resumo_influenciadores)
 		st.session_state["df_resumo"] = df_resumo
 
-		st.markdown("# Consolidação de dados para os influenciadores")
+		st.markdown("## Consolidação de dados para os influenciadores 👨‍💻\n \n")
 		st.table(df_resumo)
 
 		if not df_resumo.empty:			
