@@ -66,15 +66,16 @@ with abas[0]:
 	
 	if uploaded_files:
 		for file in uploaded_files:
-			if "desktop.ini" in file:
+			filename = file.name
+			if "desktop.ini" in filename:
 				continue
 			else:
 				ficheiros.append(file)
-				partes = file.str.split("_")
+				partes = filename.split("_")
 				if len(partes) > 1:  # Verifica se há pelo menos dois elementos após o split
-					influencers.append(partes[1][:-5])
+					influencers.append(partes[1].replace(".json", ""))
 				else:
-					print(f"Aviso: O arquivo '{file}' não segue o padrão esperado.")
+					print(f"Aviso: O arquivo '{filename}' não segue o padrão esperado.")
 		influencers_ficheiros = dict(zip(influencers, ficheiros))
 		st.session_state["influencers_ficheiros"] = influencers_ficheiros
 
@@ -82,8 +83,7 @@ with abas[0]:
 
 		for influencer, arquivo_json in influencer_ficheiros.items():
 			try:
-				with open(arquivo_json, "r", encoding="utf-8") as arquivo:
-					dados_brutos[influencer] = json.load(arquivo)
+				dados_brutos[influencer] = json.load(arquivo_json)
 			except:
 				print("Erro ao processar o arquivo para o influenciador {}".format(influencer))
 		st.session_state["dados_brutos"] = dados_brutos
