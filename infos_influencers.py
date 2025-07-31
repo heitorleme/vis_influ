@@ -112,7 +112,7 @@ with abas[1]:
 	
 	# Trocar ponto por vírgula para notação percentual brasileira
 	result_classes["distribuicao_formatada"] = result_classes["distribuicao_formatada"].str.replace('.', ',', regex=False)
-	result_classes = result.reset_index()
+	result_classes = result_classes.reset_index()
 	st.session_state["result_classes"] = result_classes
 	
 	# Converter em dicionário
