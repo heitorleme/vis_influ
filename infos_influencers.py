@@ -401,11 +401,20 @@ with abas[1]:
 		
 		    # Encontrar e formatar média de Plays em Reels
 			try:
-				valor = dados_brutos[influencer]["user_profile"]["avg_reels_plays"]
-				alcance_medio_influenciadores[influencer] = f"{valor:,}".replace(",", ".")
-			except:
-				alcance_medio_influenciadores[influencer] = "N/A"
-				print("Não foi possível encontrar o alcance do influenciador {}".format(influencer))
+			    # Primeira hipótese
+			    valor = dados_brutos[influencer]["user_profile"]["avg_reels_plays"]
+			except KeyError:
+			    try:
+			        # Segunda hipótese
+			        valor = dados_brutos[influencer]["user_profile"]["avg_views"]
+			    except KeyError:
+			        valor = None
+			
+			if valor is not None:
+			    alcance_medio_influenciadores[influencer] = f"{valor:,}".replace(",", ".")
+			else:
+			    alcance_medio_influenciadores[influencer] = "N/A"
+			    print("Não foi possível encontrar o alcance do influenciador {}".format(influencer))
 		
 			st.session_state["alcance_medio_influenciadores"] = alcance_medio_influenciadores
 	
@@ -567,6 +576,7 @@ with abas[2]:
 	
 	else:
 		st.warning("Por favor, faça o upload de arquivos JSON válidos na primeira aba")
+
 
 
 
