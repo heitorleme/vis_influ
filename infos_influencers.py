@@ -479,7 +479,7 @@ with abas[2]:
 		try:
 			commercial_posts = dados_brutos[influencer]["user_profile"]["commercial_posts"]
 		except:
-			st.text("Não há posts comerciais identificados para o influenciador {}".format(influencer)
+			st.text("Não há posts comerciais identificados para o influenciador {}".format(influencer))
 
 		if commercial_posts:
 			likes_posts = []
@@ -567,6 +567,7 @@ with abas[2]:
 	
 	else:
 		st.warning("Por favor, faça o upload de arquivos JSON válidos na primeira aba")
+
 
 
 
