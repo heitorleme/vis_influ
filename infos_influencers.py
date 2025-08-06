@@ -392,7 +392,8 @@ with abas[1]:
 		
 		    # Encontrar credibilidade da audiência
 			try:
-				score_audiencia_influenciadores[influencer] = int(dados_brutos[influencer]["audience_followers"]["data"]["audience_credibility"] * 100)
+				score[influencer] = dados_brutos[influencer]["audience_followers"]["data"]["audience_credibility"]
+				score_audiencia_influenciadores[influencer] = int(score * 100)
 			except:
 				score_audiencia_influenciadores["influencer"] = "N/A"
 				print("Não foi possível encontrar a credibilidade da audiência do influenciador {}".format(influencer))
@@ -576,6 +577,7 @@ with abas[2]:
 	
 	else:
 		st.warning("Por favor, faça o upload de arquivos JSON válidos na primeira aba")
+
 
 
 
