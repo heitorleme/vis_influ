@@ -104,6 +104,13 @@ with abas[1]:
 		df_classes_influ["normalized_weight"] = total_weight_por_cidade / total_weight_por_influencer
 	
 		df_merged_classes = pd.merge(df_classes_influ, classes_por_cidade, on=["Cidade"], how="inner")
+
+		# Recalcular 'normalized_weight' após merge
+		df_merged_classes["total_weight"] = df_merged_classes.groupby("influencer")["normalized_weight"].transform("sum")
+		df_merged_classes["normalized_weight"] = df_merged_classes["normalized_weight"] / df_merged_classes["total_weight"]
+		
+		# Remover coluna auxiliar
+		df_merged_classes.drop(columns="total_weight", inplace=True)
 	
 		df_merged_classes["normalized_classe_de"] = df_merged_classes["normalized_weight"] * df_merged_classes["Classes D e E"]
 		df_merged_classes["normalized_classe_c"] = df_merged_classes["normalized_weight"] * df_merged_classes["Classe C"]
@@ -555,6 +562,7 @@ with abas[2]:
 	
 	else:
 		st.warning("Por favor, faça o upload de arquivos JSON válidos na primeira aba")
+
 
 
 
