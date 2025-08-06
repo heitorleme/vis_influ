@@ -11,7 +11,7 @@ import requests
 import traceback
 
 st.set_page_config(layout="wide")
-abas = st.tabs(["Página Inicial 🏠", "Resumo 📄"])
+abas = st.tabs(["Página Inicial 🏠", "Resumo 📄", "Posts 📸"])
 
 with abas[0]:
 	st.title("Análise de influenciadores")
@@ -56,7 +56,7 @@ with abas[0]:
 			try:
 				dados_brutos[influencer] = json.load(arquivo_json)
 			except:
-				print("Erro ao processar o arquivo para o influenciador {}".format(influencer))
+				st.warning("Erro ao processar o arquivo para o influenciador {}".format(influencer))
 
 		for influencer in dados_brutos.keys():
 			try:
@@ -67,8 +67,11 @@ with abas[0]:
 			except Exception as e:
 				st.warning(f"Sem registro de cidades para '{influencer}': {e}")
 
-		df_cidades = df_cidades[df_cidades["country.code"] == "BR"]
-		df_cidades.rename(columns={"name":"Cidade"}, inplace=True)
+		try:
+			df_cidades = df_cidades[df_cidades["country.code"] == "BR"]
+			df_cidades.rename(columns={"name":"Cidade"}, inplace=True)
+		except:
+			st.warning("Sem dados de cidade para um ou mais dos influencers")
 		
 	else:
 		st.info("Por favor, carregue arquivos JSON para começar.")
@@ -436,3 +439,129 @@ with abas[1]:
 	else:
 		st.warning("Por favor, faça o upload de arquivos JSON válidos na primeira aba")
 
+
+with abas[2]:
+	def exibir_cards_de_posts(lista_posts):
+    """
+    Exibe uma lista de posts em layout de 3 colunas com imagem, texto e métricas.
+    """
+    for row_start in range(0, len(lista_posts), 3):
+        cols = st.columns(3)
+        for i in range(3):
+            if row_start + i >= len(lista_posts):
+                break
+            post = lista_posts[row_start + i]
+            link = post.get("link", "#")
+            with cols[i]:
+                img_url = post.get("thumbnail") or post.get("user_picture")
+                if img_url:
+                    st.markdown(
+                        f'<a href="{link}" target="_blank"><img src="{img_url}" style="width:100%; border-radius:10px;" /></a>',
+                        unsafe_allow_html=True
+                    )
+                else:
+                    st.warning("Imagem não disponível para este post.")
+
+                st.markdown(f"**{post.get('text', '')}**")
+
+                stat = post.get("stat", {})
+                st.markdown(f"👍 Likes: **{stat.get('likes', 0)}**")
+                st.markdown(f"💬 Comentários: **{stat.get('comments', 0)}**")
+                st.markdown(f"🔁 Compartilhamentos: **{stat.get('shares', 0)}**")
+
+def exibir_posts(influencer, dados_brutos):
+    commercial_posts = dados_brutos[influencer]["user_profile"]["commercial_posts"]
+    recent_posts = dados_brutos[influencer]["user_profile"]["recent_posts"]
+
+    for post in commercial_posts:
+        stat = post.get("stat", {})
+        likes_posts.append(stat.get("likes", 0))
+        comments_posts.append(stat.get("comments", 0))
+        shares_posts.append(stat.get("shares", 0))
+
+        sponsor = post.get("sponsor", {})
+        marca = sponsor.get("usename")
+        if marca:
+            marcas_posts.append(marca)
+    
+    # Cálculos - Posts comerciais
+    likes_total_comercial = np.sum(likes_posts) if likes_posts else 0
+    comments_total_comercial = np.sum(comments_posts) if comments_posts else 0
+    shares_total_comercial = np.sum(shares_posts) if shares_posts else 0
+    marcas_posts = np.unique(marcas_posts)
+
+    # Subtítulo
+    st.markdown("### Posts comerciais:")
+
+    # Mostrar métricas
+    st.markdown("### Métricas das publicações identificadas na amostra:")
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.metric("👍 Média de Likes", f"{int(likes_total_comercial):,}".replace(",", "."))
+    with col2:
+        st.metric("💬 Média de Comentários", f"{int(comments_total_comercial):,}".replace(",", "."))
+    with col3:
+        st.metric("🔁 Média de Shares", f"{int(shares_total_comercial):,}".replace(",", "."))
+
+    exibir_cards_de_posts(commercial_posts)
+    
+    likes_posts = []
+    comments_posts = []
+    shares_posts = []
+
+    for post in recent_posts:
+        stat = post.get("stat", {})
+        likes_posts.append(stat.get("likes", 0))
+        comments_posts.append(stat.get("comments", 0))
+        shares_posts.append(stat.get("shares", 0))
+    
+    # Cálculos - Posts recentes
+    likes_total_recentes = np.sum(likes_posts) if likes_posts else 0
+    comments_total_recentes = np.sum(comments_posts) if comments_posts else 0
+    shares_total_recentes = np.sum(shares_posts) if shares_posts else 0
+
+    # Subtítulo
+    st.markdown("\n\n### Posts recentes:")
+
+    # Mostrar métricas
+    st.markdown("### Métricas das publicações identificadas na amostra:")
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.metric("👍 Média de Likes", f"{int(likes_total_recentes):,}".replace(",", "."))
+    with col2:
+        st.metric("💬 Média de Comentários", f"{int(comments_total_recentes):,}".replace(",", "."))
+    with col3:
+        st.metric("🔁 Média de Shares", f"{int(shares_total_recentes):,}".replace(",", "."))
+
+    exibir_cards_de_posts(recent_posts)
+
+	influenciador_selecionado = st.selectbox(
+            "Influenciador:", 
+            st.session_state.influencers_nomes, 
+            key="select_influencer_posts"
+        )
+    
+        if influenciador_selecionado:
+            exibir_posts(
+                influencer=influenciador_selecionado,
+                dados=st.session_state["dados_brutos"]
+            )
+
+	if uploaded_files:
+		dados_brutos = st.session_state["dados_brutos"]
+		nomes_influenciadores = st.session_state["nomes_influenciadores"]
+		
+		influenciador_selecionado = st.selectbox(
+            "Influenciador:", 
+            nomes_influenciadores, 
+            key="select_influencer_posts"
+        )
+    
+        if influenciador_selecionado:
+            exibir_posts(
+                influencer=influenciador_selecionado,
+                dados=dados_brutos
+            )
+	
+	else:
+		st.warning("Por favor, faça o upload de arquivos JSON válidos na primeira aba")
