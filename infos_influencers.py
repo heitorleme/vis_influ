@@ -445,29 +445,29 @@ with abas[2]:
     """
     Exibe uma lista de posts em layout de 3 colunas com imagem, texto e métricas.
     """
-	for row_start in range(0, len(lista_posts), 3):
-		cols = st.columns(3)
-		for i in range(3):
-			if row_start + i >= len(lista_posts):
-				break
-			post = lista_posts[row_start + i]
-			link = post.get("link", "#")
-			with cols[i]:
-				img_url = post.get("thumbnail") or post.get("user_picture")
-                if img_url:
-					st.markdown(
-						f'<a href="{link}" target="_blank"><img src="{img_url}" style="width:100%; border-radius:10px;" /></a>',
-						unsafe_allow_html=True
-					)
-				else:
-					st.warning("Imagem não disponível para este post.")
-
-				st.markdown(f"**{post.get('text', '')}**")
-
-				stat = post.get("stat", {})
-				st.markdown(f"👍 Likes: **{stat.get('likes', 0)}**")
-				st.markdown(f"💬 Comentários: **{stat.get('comments', 0)}**")
-				st.markdown(f"🔁 Compartilhamentos: **{stat.get('shares', 0)}**")
+		for row_start in range(0, len(lista_posts), 3):
+			cols = st.columns(3)
+			for i in range(3):
+				if row_start + i >= len(lista_posts):
+					break
+				post = lista_posts[row_start + i]
+				link = post.get("link", "#")
+				with cols[i]:
+					img_url = post.get("thumbnail") or post.get("user_picture")
+	                if img_url:
+						st.markdown(
+							f'<a href="{link}" target="_blank"><img src="{img_url}" style="width:100%; border-radius:10px;" /></a>',
+							unsafe_allow_html=True
+						)
+					else:
+						st.warning("Imagem não disponível para este post.")
+	
+					st.markdown(f"**{post.get('text', '')}**")
+	
+					stat = post.get("stat", {})
+					st.markdown(f"👍 Likes: **{stat.get('likes', 0)}**")
+					st.markdown(f"💬 Comentários: **{stat.get('comments', 0)}**")
+					st.markdown(f"🔁 Compartilhamentos: **{stat.get('shares', 0)}**")
 
 def exibir_posts(influencer, dados_brutos):
 	commercial_posts = dados_brutos[influencer]["user_profile"]["commercial_posts"]
@@ -565,4 +565,5 @@ def exibir_posts(influencer, dados_brutos):
 	
 	else:
 		st.warning("Por favor, faça o upload de arquivos JSON válidos na primeira aba")
+
 
