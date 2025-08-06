@@ -535,36 +535,23 @@ with abas[2]:
 	
 		exibir_cards_de_posts(recent_posts)
 
-	influenciador_selecionado = st.selectbox(
-			"Influenciador:", 
-			st.session_state.influencers_nomes, 
-			key="select_influencer_posts"
-	)
-    
-		if influenciador_selecionado:
-			exibir_posts(
-				influencer=influenciador_selecionado,
-				dados=st.session_state["dados_brutos"]
-			)
-
 	if uploaded_files:
 		dados_brutos = st.session_state["dados_brutos"]
 		nomes_influenciadores = st.session_state["nomes_influenciadores"]
 		
 		influenciador_selecionado = st.selectbox(
-			"Influenciador:", 
-			nomes_influenciadores, 
-			key="select_influencer_posts"
+				"Influenciador:", 
+				st.session_state.influencers_nomes, 
+				key="select_influencer_posts"
 		)
-
-	if influenciador_selecionado:
-			exibir_posts(
-				influencer=influenciador_selecionado,
-				dados=dados_brutos
-			)
+	    
+			if influenciador_selecionado:
+				exibir_posts(
+					influencer=influenciador_selecionado,
+					dados=st.session_state["dados_brutos"]
+				)
 	
 	else:
 		st.warning("Por favor, faça o upload de arquivos JSON válidos na primeira aba")
-
 
 
