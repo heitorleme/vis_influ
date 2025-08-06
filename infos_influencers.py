@@ -442,9 +442,6 @@ with abas[1]:
 
 with abas[2]:
 	def exibir_cards_de_posts(lista_posts):
-    """
-    Exibe uma lista de posts em layout de 3 colunas com imagem, texto e métricas.
-    """
 		for row_start in range(0, len(lista_posts), 3):
 			cols = st.columns(3)
 			for i in range(3):
@@ -553,5 +550,6 @@ with abas[2]:
 	
 	else:
 		st.warning("Por favor, faça o upload de arquivos JSON válidos na primeira aba")
+
 
 
