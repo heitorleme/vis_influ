@@ -474,45 +474,50 @@ with abas[2]:
 					st.markdown(f"🔁 Compartilhamentos: **{stat.get('shares', 0)}**")
 
 	def exibir_posts(influencer, dados_brutos):
-		commercial_posts = dados_brutos[influencer]["user_profile"]["commercial_posts"]
 		recent_posts = dados_brutos[influencer]["user_profile"]["recent_posts"]
+		
+		try:
+			commercial_posts = dados_brutos[influencer]["user_profile"]["commercial_posts"]
+		except:
+			st.text("Não há posts comerciais identificados para o influenciador {}".format(influencer)
 
-		likes_posts = []
-		comments_posts = []
-		shares_posts = []
-		marcas_posts = []
-	
-		for post in commercial_posts:
-			stat = post.get("stat", {})
-			likes_posts.append(stat.get("likes", 0))
-			comments_posts.append(stat.get("comments", 0))
-			shares_posts.append(stat.get("shares", 0))
-			
-			sponsor = post.get("sponsor", {})
-			marca = sponsor.get("usename")
-			if marca:
-				marcas_posts.append(marca)
-	    
-	    # Cálculos - Posts comerciais
-		likes_total_comercial = np.sum(likes_posts) if likes_posts else 0
-		comments_total_comercial = np.sum(comments_posts) if comments_posts else 0
-		shares_total_comercial = np.sum(shares_posts) if shares_posts else 0
-		marcas_posts = np.unique(marcas_posts)
-	
-	    # Subtítulo
-		st.markdown("### Posts comerciais:")
-	
-	    # Mostrar métricas
-		st.markdown("### Métricas das publicações identificadas na amostra:")
-		col1, col2, col3 = st.columns(3)
-		with col1:
-			st.metric("👍 Média de Likes", f"{int(likes_total_comercial):,}".replace(",", "."))
-		with col2:
-			st.metric("💬 Média de Comentários", f"{int(comments_total_comercial):,}".replace(",", "."))
-		with col3:
-			st.metric("🔁 Média de Shares", f"{int(shares_total_comercial):,}".replace(",", "."))
-	
-		exibir_cards_de_posts(commercial_posts)
+		if commercial_posts:
+			likes_posts = []
+			comments_posts = []
+			shares_posts = []
+			marcas_posts = []
+		
+			for post in commercial_posts:
+				stat = post.get("stat", {})
+				likes_posts.append(stat.get("likes", 0))
+				comments_posts.append(stat.get("comments", 0))
+				shares_posts.append(stat.get("shares", 0))
+				
+				sponsor = post.get("sponsor", {})
+				marca = sponsor.get("usename")
+				if marca:
+					marcas_posts.append(marca)
+		    
+		    # Cálculos - Posts comerciais
+			likes_total_comercial = np.sum(likes_posts) if likes_posts else 0
+			comments_total_comercial = np.sum(comments_posts) if comments_posts else 0
+			shares_total_comercial = np.sum(shares_posts) if shares_posts else 0
+			marcas_posts = np.unique(marcas_posts)
+		
+		    # Subtítulo
+			st.markdown("### Posts comerciais:")
+		
+		    # Mostrar métricas
+			st.markdown("### Métricas das publicações identificadas na amostra:")
+			col1, col2, col3 = st.columns(3)
+			with col1:
+				st.metric("👍 Média de Likes", f"{int(likes_total_comercial):,}".replace(",", "."))
+			with col2:
+				st.metric("💬 Média de Comentários", f"{int(comments_total_comercial):,}".replace(",", "."))
+			with col3:
+				st.metric("🔁 Média de Shares", f"{int(shares_total_comercial):,}".replace(",", "."))
+		
+			exibir_cards_de_posts(commercial_posts)
 	    
 		likes_posts = []
 		comments_posts = []
@@ -562,6 +567,7 @@ with abas[2]:
 	
 	else:
 		st.warning("Por favor, faça o upload de arquivos JSON válidos na primeira aba")
+
 
 
 
