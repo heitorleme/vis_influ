@@ -514,10 +514,10 @@ with abas[2]:
 			st.markdown("### Posts comerciais:")
 
 			# Mostrar marcas
-	        if marcas_posts.size > 0:
-	            st.markdown("### Perfis no Instagram das marcas mencionadas:")
-	            texto_links = "\n".join([f"- [{marca}](https://www.instagram.com/{marca})" for marca in marcas_posts])
-	            st.markdown(texto_links)
+			if marcas_posts.size > 0:
+				st.markdown("### Perfis no Instagram das marcas mencionadas:")
+				texto_links = "\n".join([f"- [{marca}](https://www.instagram.com/{marca})" for marca in marcas_posts])
+				st.markdown(texto_links)
 		
 		    # Mostrar métricas
 			st.markdown("### Métricas das publicações identificadas na amostra:")
@@ -583,6 +583,7 @@ with abas[2]:
 	
 	else:
 		st.warning("Por favor, faça o upload de arquivos JSON válidos na primeira aba")
+
 
 
 
