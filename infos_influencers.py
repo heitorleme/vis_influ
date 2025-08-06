@@ -426,7 +426,7 @@ with abas[1]:
 			resumo_influenciadores.append({
 				"Username do influenciador": influencer,
 				"Nome do influenciador": nomes_influenciadores.get(influencer),
-				"Score da audiência": int(score_audiencia_influenciadores.get(influencer, 0)),
+				"Score da audiência": int(score_audiencia_influenciadores.get(influencer, "N/A")),
 				"Dispersão de interações": int(dispersao_influencers.get(influencer, 0)),
 				"Alcance médio esperado": alcance_medio_influenciadores.get(influencer),
 				"Interesses da audiência": interesses_dict.get(influencer),
@@ -576,6 +576,7 @@ with abas[2]:
 	
 	else:
 		st.warning("Por favor, faça o upload de arquivos JSON válidos na primeira aba")
+
 
 
 
