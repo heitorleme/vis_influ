@@ -394,7 +394,7 @@ with abas[1]:
 			try:
 				score[influencer] = dados_brutos[influencer]["audience_followers"]["data"]["audience_credibility"]
 				if score[influencer] == 0:
-					score[influencer] = score[influencer].str.replace("0", "N/A")
+					score_audiencia_influenciadores[influencer] = score[influencer].str.replace("0", "N/A")
 				else:
 					score_audiencia_influenciadores[influencer] = int(score * 100)
 			except:
@@ -580,6 +580,7 @@ with abas[2]:
 	
 	else:
 		st.warning("Por favor, faça o upload de arquivos JSON válidos na primeira aba")
+
 
 
 
