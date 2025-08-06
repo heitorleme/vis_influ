@@ -542,15 +542,11 @@ with abas[2]:
 				key="select_influencer_posts"
 		)
 	    
-			if influenciador_selecionado:
-				exibir_posts(
-					influencer=influenciador_selecionado,
-					dados=st.session_state["dados_brutos"]
-				)
+		if influenciador_selecionado:
+			exibir_posts(
+				influencer=influenciador_selecionado,
+				dados=st.session_state["dados_brutos"]
+			)
 	
 	else:
 		st.warning("Por favor, faça o upload de arquivos JSON válidos na primeira aba")
-
-
-
-
