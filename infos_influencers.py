@@ -91,7 +91,14 @@ with abas[1]:
 		classes_por_cidade.drop(columns=["Unnamed: 0"], inplace=True)
 	
 		df_classes_influ = df_cidades.copy()
-		df_classes_influ["normalized_weight"] = df_classes_influ.groupby("influencer")["weight"].transform(lambda x: (x/x.sum()))
+		# Primeiro, soma total de weight por influencer
+		total_weight_por_influencer = df_classes_influ.groupby("influencer")["weight"].transform("sum")
+		
+		# Depois, soma de weight por influencer + cidade
+		total_weight_por_cidade = df_classes_influ.groupby(["influencer", "Cidade"])["weight"].transform("sum")
+		
+		# Agora, atribuímos o weight normalizado (valor da cidade dividido pela soma total do influencer)
+		df_classes_influ["normalized_weight"] = total_weight_por_cidade / total_weight_por_influencer
 	
 		df_merged_classes = pd.merge(df_classes_influ, classes_por_cidade, on=["Cidade"], how="inner")
 	
@@ -100,9 +107,16 @@ with abas[1]:
 		df_merged_classes["normalized_classe_b"] = df_merged_classes["normalized_weight"] * df_merged_classes["Classe B"]
 		df_merged_classes["normalized_classe_a"] = df_merged_classes["normalized_weight"] * df_merged_classes["Classe A"]
 	
-		result_classes = df_merged_classes.groupby("influencer")[["Classes D e E", "Classe C", "Classe B", "Classe A"]].mean()
+		result_classes = df_merged_classes.groupby("influencer")[[
+																    "normalized_classe_de",
+																    "normalized_classe_c",
+																    "normalized_classe_b",
+																    "normalized_classe_a"
+																]].sum()
 		result_classes = result_classes.round(2)
-	
+
+		result_classes.columns= ["Classes D e E", "Classe C", "Classe B", "Classe A"]
+		
 		result_classes[["Classes D e E", "Classe C", "Classe B", "Classe A"]] /= 100
 	
 		result_classes["distribuicao_formatada"] = result_classes.apply(
@@ -421,3 +435,4 @@ with abas[1]:
 							  mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
 	else:
 		st.warning("Por favor, faça o upload de arquivos JSON válidos na primeira aba")
+
