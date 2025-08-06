@@ -24,7 +24,7 @@ with abas[0]:
 	st.markdown("### Como utilizar")
 	st.markdown('''Os arquivos de input devem ser arquivos .json extraídos
  				diretamente do IMAI. Para o processo ser bem-sucedido, os arquivos devem ser nomeados no formato
-	 			json_{perfil do influenciador}.json. Para já, apenas a análise dos perfis do Instagram é funcional.''')
+	 			```json_{perfil do influenciador}.json```. Para já, apenas a análise dos perfis do Instagram é funcional.''')
 
 	# Upload de múltiplos arquivos JSON
 	st.markdown("### Uploader")
@@ -555,6 +555,7 @@ with abas[2]:
 	
 	else:
 		st.warning("Por favor, faça o upload de arquivos JSON válidos na primeira aba")
+
 
 
 
