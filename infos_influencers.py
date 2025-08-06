@@ -429,9 +429,9 @@ with abas[1]:
 				"Score da audiência": score_audiencia_influenciadores.get(influencer, "N/A"),
 				"Dispersão de interações": int(dispersao_influencers.get(influencer, 0)),
 				"Alcance médio esperado": alcance_medio_influenciadores.get(influencer),
-				"Interesses da audiência": interesses_dict.get(influencer),
-				"Classes sociais": classes_sociais_dict.get(influencer),
-				"Escolaridade": escolaridade_dict.get(influencer),
+				"Interesses da audiência": interesses_dict.get(influencer, "Não há dados de interesses da audiência disponíveis"),
+				"Classes sociais": classes_sociais_dict.get(influencer, "Não há informações geográficas para a audiência do perfil"),
+				"Escolaridade": escolaridade_dict.get(influencer, "Não há informações geográficas para a audiência do perfil"),
 			})
 		
 		# Criar o DataFrame
@@ -576,6 +576,7 @@ with abas[2]:
 	
 	else:
 		st.warning("Por favor, faça o upload de arquivos JSON válidos na primeira aba")
+
 
 
 
