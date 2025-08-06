@@ -517,7 +517,7 @@ with abas[2]:
 			exibir_cards_de_posts(commercial_posts)
 			
 		except:
-			st.text("Não há posts comerciais identificados para o influenciador {}".format(influencer))
+			st.warning("Não há posts comerciais identificados para o influenciador {}".format(influencer))
 	    
 		likes_posts = []
 		comments_posts = []
@@ -567,6 +567,7 @@ with abas[2]:
 	
 	else:
 		st.warning("Por favor, faça o upload de arquivos JSON válidos na primeira aba")
+
 
 
 
