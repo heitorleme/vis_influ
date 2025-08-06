@@ -469,6 +469,11 @@ with abas[2]:
 	def exibir_posts(influencer, dados_brutos):
 		commercial_posts = dados_brutos[influencer]["user_profile"]["commercial_posts"]
 		recent_posts = dados_brutos[influencer]["user_profile"]["recent_posts"]
+
+		likes_posts = []
+		comments_posts = []
+		shares_posts = []
+		marcas_posts = []
 	
 		for post in commercial_posts:
 			stat = post.get("stat", {})
@@ -550,5 +555,6 @@ with abas[2]:
 	
 	else:
 		st.warning("Por favor, faça o upload de arquivos JSON válidos na primeira aba")
+
 
 
