@@ -478,10 +478,7 @@ with abas[2]:
 		
 		try:
 			commercial_posts = dados_brutos[influencer]["user_profile"]["commercial_posts"]
-		except:
-			st.text("Não há posts comerciais identificados para o influenciador {}".format(influencer))
 
-		if commercial_posts:
 			likes_posts = []
 			comments_posts = []
 			shares_posts = []
@@ -518,6 +515,9 @@ with abas[2]:
 				st.metric("🔁 Média de Shares", f"{int(shares_total_comercial):,}".replace(",", "."))
 		
 			exibir_cards_de_posts(commercial_posts)
+			
+		except:
+			st.text("Não há posts comerciais identificados para o influenciador {}".format(influencer))
 	    
 		likes_posts = []
 		comments_posts = []
@@ -567,6 +567,7 @@ with abas[2]:
 	
 	else:
 		st.warning("Por favor, faça o upload de arquivos JSON válidos na primeira aba")
+
 
 
 
