@@ -19,7 +19,7 @@ with abas[0]:
 	st.markdown('''Este app tem a função de consolidar o processo de extração de dados de influenciadores anteriormente 
  				implementado manualmente, caso a caso. O resumo tradicionalmente disponibilizado está disponível na aba
 	 			Resumo, com a opção de download direto de um arquivo Excel. Num futuro próximo planejamos separar e adicionar, ainda, dados e visualizações
-	 			relativas ao Influencer, à Audiência e às Publicações a outras abas.''')
+	 			relativas ao Influencer e à Audiência a outras abas.''')
 
 	st.markdown("### Como utilizar")
 	st.markdown('''Os arquivos de input devem ser arquivos .json extraídos
@@ -512,6 +512,12 @@ with abas[2]:
 		
 		    # Subtítulo
 			st.markdown("### Posts comerciais:")
+
+			# Mostrar marcas
+	        if marcas_posts.size > 0:
+	            st.markdown("### Perfis no Instagram das marcas mencionadas:")
+	            texto_links = "\n".join([f"- [{marca}](https://www.instagram.com/{marca})" for marca in marcas_posts])
+	            st.markdown(texto_links)
 		
 		    # Mostrar métricas
 			st.markdown("### Métricas das publicações identificadas na amostra:")
@@ -577,6 +583,7 @@ with abas[2]:
 	
 	else:
 		st.warning("Por favor, faça o upload de arquivos JSON válidos na primeira aba")
+
 
 
 
