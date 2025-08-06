@@ -564,7 +564,8 @@ with abas[2]:
 		
 		influenciador_selecionado = st.selectbox(
 				"Influenciador:", 
-				nomes_influenciadores, 
+				nomes_influenciadores,
+				index=None,
 				key="select_influencer_posts"
 		)
 	    
@@ -576,6 +577,7 @@ with abas[2]:
 	
 	else:
 		st.warning("Por favor, faça o upload de arquivos JSON válidos na primeira aba")
+
 
 
 
