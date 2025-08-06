@@ -451,7 +451,7 @@ with abas[2]:
 				link = post.get("link", "#")
 				with cols[i]:
 					img_url = post.get("thumbnail") or post.get("user_picture")
-	                if img_url:
+					if img_url:
 						st.markdown(
 							f'<a href="{link}" target="_blank"><img src="{img_url}" style="width:100%; border-radius:10px;" /></a>',
 							unsafe_allow_html=True
@@ -550,6 +550,7 @@ with abas[2]:
 	
 	else:
 		st.warning("Por favor, faça o upload de arquivos JSON válidos na primeira aba")
+
 
 
 
